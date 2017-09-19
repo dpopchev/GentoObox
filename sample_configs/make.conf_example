@@ -1,0 +1,41 @@
+# These settings were set by the catalyst build script that automatically
+# built this stage.
+# Please consult /usr/share/portage/config/make.conf.example for a more
+# detailed example.
+
+CFLAGS="-march=native -O2 -pipe"
+CXXFLAGS="${CFLAGS}"
+
+# WARNING: Changing your CHOST is not something that should be done lightly.
+# Please consult http://www.gentoo.org/doc/en/change-chost.xml before changing.
+
+CHOST="x86_64-pc-linux-gnu"
+
+# These are the USE flags that were used in addition to what is provided by the
+# profile used for building.
+
+ACCEPT_KEYWORDS="amd64"
+
+MAKEOPTS="--jobs=4 --load-average=3.8"
+EMERGE_DEFAULT_OPTS="--jobs=4 --load-average=3.8 --with-bdeps y --quiet-build y --keep-going --autounmask-write y"
+FEATURES="parallel-fetch parallel-install userfetch userpriv usersync usersandbox cgroup clean-logs collision-protect fakeroot merge-sync multilib-strict news preserve-libs sandbox ebuild-locks strict unmerge-orphans "
+AUTOCLEAN="yes"
+CPU_FLAGS_X86="aes avx avx2 fma3 mmx mmxext popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3"
+PYTHON_TARGETS="python2_7 python3_4"
+
+VIDEO_CARDS="intel i965"
+INPUT_DEVICES="synaptics evdev"
+L10N="bg en"
+
+SOUND = "pulseaudio"
+NETWORK = "networkmanager"
+FONTS = "truetype type1 cleartype corefonts"
+MISC = "hdaps xinerama"
+
+USE= "${SOUND} ${NETWORK} ${FONTS} ${MISC} "
+
+PORTDIR="/usr/portage"
+DISTDIR="${PORTDIR}/distfiles"
+PKGDIR="${PORTDIR}/packages"
+GENTOO_MIRRORS="http://mirrors.telepoint.bg/gentoo/ http://mirrors.xservers.ro/gentoo/ http://tux.rainside.sk/gentoo/ http://ftp.romnet.org/gentoo/ http://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/ http://ftp.uni-erlangen.de/pub/mirrors/gentoo"
+source /var/lib/layman/make.conf
