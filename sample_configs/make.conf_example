@@ -18,24 +18,31 @@ ACCEPT_KEYWORDS="amd64"
 
 MAKEOPTS="--jobs=4 --load-average=3.8"
 EMERGE_DEFAULT_OPTS="--jobs=4 --load-average=3.8 --with-bdeps y --quiet-build y --keep-going --autounmask-write y"
-FEATURES="parallel-fetch parallel-install userfetch userpriv usersync usersandbox cgroup clean-logs collision-protect fakeroot merge-sync multilib-strict news preserve-libs sandbox ebuild-locks strict unmerge-orphans "
+#check for cgroup
+FEATURES="parallel-install multilib-strict candy"
 AUTOCLEAN="yes"
 CPU_FLAGS_X86="aes avx avx2 fma3 mmx mmxext popcnt sse sse2 sse3 sse4_1 sse4_2 ssse3"
 PYTHON_TARGETS="python2_7 python3_4"
 
 VIDEO_CARDS="intel i965"
 INPUT_DEVICES="synaptics evdev"
-L10N="bg en"
+L10N="bg en en-GB"
+LINGUAS="bg en en-GB"
 
 SOUND = "pulseaudio"
 NETWORK = "networkmanager"
 FONTS = "truetype type1 cleartype corefonts"
+INTEL_MODESETTING="glamor"
+GUI = "qt5 -qt4"
 MISC = "hdaps xinerama"
 
-USE= "${SOUND} ${NETWORK} ${FONTS} ${MISC} "
+USE= "${SOUND} ${NETWORK} ${FONTS} ${INTEL_MODESETTING} ${GUI} ${MISC}"
+
+#XFCE_PLUGINS="brightness clock trash power multiload-nandhp"
 
 PORTDIR="/usr/portage"
 DISTDIR="${PORTDIR}/distfiles"
 PKGDIR="${PORTDIR}/packages"
-GENTOO_MIRRORS="http://mirrors.telepoint.bg/gentoo/ http://mirrors.xservers.ro/gentoo/ http://tux.rainside.sk/gentoo/ http://ftp.romnet.org/gentoo/ http://mirror.eu.oneandone.net/linux/distributions/gentoo/gentoo/ http://ftp.uni-erlangen.de/pub/mirrors/gentoo"
-source /var/lib/layman/make.conf
+#source /var/lib/layman/make.conf
+
+GENTOO_MIRRORS="http://tux.rainside.sk/gentoo/ ftp://ftp.uni-erlangen.de/pub/mirrors/gentoo http://ftp.halifax.rwth-aachen.de/gentoo/ http://ftp.twaren.net/Linux/Gentoo/ ftp://ftp.twaren.net/Linux/Gentoo/"

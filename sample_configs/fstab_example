@@ -11,12 +11,24 @@
 # See the manpage fstab(5) for more information.
 #
 
-# <fs>			  <mountpoint>	  <type>		<opts>		  <dump/pass>
+# <fs>			<mountpoint>	<type>		<opts>		<dump/pass>
 
 # NOTE: If your BOOT partition is ReiserFS, add the notail option to opts.
-/dev/sda6			/boot		        ext4			noatime		  1 2
-/dev/sda7			/		            ext4		  noatime		  0 1
-/dev/sda8			/home		        ext4			noatime		  0 1
-/dev/sda5			none		        swap		  sw			    0 0
-/dev/cdrom		/mnt/cdrom	    auto			noauto,ro		0 0
-#/dev/fd0			/mnt/floppy	    auto			noauto		  0 0
+#
+# NOTE: Even though we list ext4 as the type here, it will work with ext2/ext3
+#       filesystems.  This just tells the kernel to use the ext4 driver.
+#
+# NOTE: You can use full paths to devices like /dev/sda3, but it is often
+#       more reliable to use filesystem labels or UUIDs. See your filesystem
+#       documentation for details on setting a label. To obtain the UUID, use
+#       the blkid(8) command.
+
+#LABEL=boot		/boot		ext4		noauto,noatime	1 2
+#UUID=58e72203-57d1-4497-81ad-97655bd56494		/		ext4		noatime		0 1
+#LABEL=swap		none		swap		sw		0 0
+#/dev/cdrom		/mnt/cdrom	auto		noauto,ro	0 0
+/dev/sda6	/boot		ext4	defaults,noatime	0 2
+/dev/sda5	none		swap	sw			0 0
+/dev/sda7	/		ext4	noatime			0 1
+/dev/sda8	/home		ext4	noatime			0 2
+/dev/cdrom	/mnt/cdrom	auto	noauto,ro		0 0
