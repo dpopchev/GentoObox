@@ -52,6 +52,12 @@
 	linewidth=\linewidth,
 }
 
+\lstdefinestyle{KernelConfig}{
+	backgroundcolor=\color{lightgray},
+	basicstyle=\ttfamily\color{black},
+	linewidth=\linewidth,
+}
+
 \definecolor{eclipseBlue}{RGB}{42,0.0,255}
 \lstdefinelanguage{LinuxConfigFiles}{
 	backgroundcolor=\color{yellow!30},
@@ -91,9 +97,9 @@
         \paragraph{} Unfortunately there are not many guides how to build your system. Some honourable mentions are \href{https://urukrama.wordpress.com/openbox-guide/}{Urukrama openbox guide}, \href{https://wiki.gentoo.org/wiki/Openbox}{Gentoo Openbox Wiki}, \href{https://wiki.archlinux.org/index.php/openbox}{Arch Openbox Wiki}, but they do not contain all the answers. For example it took me embarrassingly long time to understand what is a dock, example plank, system tray and how they do not mix in all cases. Or how to create dual head configuration using ZaphodHeads method in xorg. This document is dedicated to all of those problems I faced and put numerous hours to resolve.
     
         \newpage
-    \section{ Basic Gentoo installation }
+    \section{Basic Gentoo installation}
     
-        \subsection{ Preparing the disks }
+        \subsection{Preparing the disks}
         
             \paragraph{} This section is dedicated on the basic Gentoo installation. It follows for the most part \href{https://wiki.gentoo.org/wiki/Handbook:AMD64}{Gentoo AMD64 Handbook} and will include additional details.
             
@@ -114,15 +120,15 @@
                     \item \textbf{home partition} - ext4 - $ 120 \mbox{ GB} $ - the partition for /home, reasons see above link
                 \end{itemize}
             
-                \paragraph{} After the partitioning is done the live distro usually automaticly activates the swap, but if necessary you can do it by hand with 
+                \paragraph{} After the partitioning is done the live distro usually automaticly activates the swap, but if necessary you can do it by hand with.
 
 \begin{lstlisting}[style=BashInputRoot]
 root# swapon /dev/sdb{swap partition number}
 \end{lstlisting}
 
         \newpage
-        \subsection{ Installing a stage tarball }
-            \paragraph{} Now lets mount the root partition
+        \subsection{Installing a stage tarball}
+            \paragraph{} Now lets mount the root partition.
 
 \begin{lstlisting}[style=BashInputRoot]
 root# mkdir /mnt/gentoo && \
@@ -156,7 +162,8 @@ root# cd /mnt/gentoo && \
         
             \subsubsection{Pre requires}
         
-                \paragraph{} Now we will \textbf{chroot} into \textit{/mnt/gentoo} and configure everything within there. For this to happen we need to\begin{enumerate}
+                \paragraph{} Now we will \textbf{chroot} into \textit{/mnt/gentoo} and configure everything within there. For this to happen we need to
+                \begin{enumerate}
                     \item copy dns info
                     \item mount our partitions
                     \item mount the necessary filesystems 
@@ -185,7 +192,8 @@ root# mount /dev/sdb{home partition number} /mnt/gentoo/home
                     
 \lstinputlisting[linerange={30-34}, firstnumber=30, language=LinuxConfigFiles]{sample_configs/fstab_example}
                     
-                    \paragraph{} Quick reference by field, for more details \href{http://www.coolcoder.in/2013/12/linux-fstab-file-explained.html}{for example see here} or \href{https://wiki.archlinux.org/index.php/fstab}{here} \begin{enumerate}[label=(\arabic*)] 
+                    \paragraph{} Quick reference by field, for more details \href{http://www.coolcoder.in/2013/12/linux-fstab-file-explained.html}{for example see here} or \href{https://wiki.archlinux.org/index.php/fstab}{here} 
+                    \begin{enumerate}[label=(\arabic*)] 
                         \item device/partition, can be specified with label, network id, device path
                         \item mount point
                         \item filesystem type
@@ -205,14 +213,14 @@ root# mount /dev/sdb{home partition number} /mnt/gentoo/home
                     \newpage
                     \item mount the necessary filesystems, again I presume using non-Gentoo installation media
 \begin{lstlisting}[style=BashInputRoot]
-root# mount -t proc /proc /mnt/gentoo/proc 
-root# mount --rbind /sys /mnt/gentoo/sys 
-root# mount --make-rslave /mnt/gentoo/sys
-root# mount --rbind /dev /mnt/gentoo/dev 
-root# mount --make-rslave /mnt/gentoo/dev 
-root# test -L /dev/shm && rm /dev/shm && mkdir /dev/shm 
-root# mount -t tmpfs -o nosuid,nodev,noexec shm /dev/shm
-root# chmod 1777 /dev/shm
+ root# mount -t proc /proc /mnt/gentoo/proc 
+ root# mount --rbind /sys /mnt/gentoo/sys 
+ root# mount --make-rslave /mnt/gentoo/sys
+ root# mount --rbind /dev /mnt/gentoo/dev 
+ root# mount --make-rslave /mnt/gentoo/dev 
+ root# test -L /dev/shm && rm /dev/shm && mkdir /dev/shm 
+ root# mount -t tmpfs -o nosuid,nodev,noexec shm /dev/shm
+ root# chmod 1777 /dev/shm
 \end{lstlisting}
                     
                 \end{enumerate}
@@ -255,7 +263,7 @@ root# export PS1="CH${PS1}"
 \end{lstlisting}
                
            \newpage
-           \subsubsection{Profile selection}
+            \subsubsection{Profile selection}
             
                 \paragraph{} Now lets choose our profile, each one comes with predefined use flags \href{https://wiki.gentoo.org/wiki/Handbook:PPC/Working/USE}{(if you are not sure come here)}
             
@@ -291,175 +299,248 @@ root# export PS1="CH${PS1}"
 \end{lstlisting}
         
         \newpage
-        \subsubsection{/etc/portage/make.conf}
+
+            \subsubsection{/etc/portage/make.conf}
         
-            \paragraph{} The \textbf{/etc/portage/make.conf} is used to define settings and options applied to every package that is emerged. In the following lines I will explain in detail my configs. \href{https://wiki.gentoo.org/wiki//etc/portage/make.conf}{More details click here}
-            
-            \begin{itemize}
-                \item \textbf{CFLAGS}, \textbf{CXXFLAGS} are variables who define the build and compile flags that will be used for all package deployments. CFLAGS are for C based applications, CXXFLAGS are for C++ based ones.
-
+                \paragraph{} The \textbf{/etc/portage/make.conf} is used to define settings and options applied to every package that is emerged. In the following lines I will explain in detail my configs. \href{https://wiki.gentoo.org/wiki//etc/portage/make.conf}{More details click here}
+                
+                \begin{itemize}
+                    \item \textbf{CFLAGS}, \textbf{CXXFLAGS} are variables who define the build and compile flags that will be used for all package deployments. CFLAGS are for C based applications, CXXFLAGS are for C++ based ones.
+    
 \lstinputlisting[linerange={6-7}, firstnumber=6, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-
-                \begin{itemize}[label={o}]
-
-                    \item \textbf{-march=native} option: If the type of CPU is undetermined, or if the user does not know what setting to choose, it is possible use the \textit{-march=native} settings. When this flag is used, GCC will attempt to detect the processor and automatically set appropriate flags for it. \textit{This should not be used when intending to compile packages for different CPUs!}\\
-                    You can find the kind of CPU you have by using
-\begin{lstlisting}[style=BashInputUser]					
-user$ cat /proc/cpuinfo					
-\end{lstlisting}
-                    
-                    If you are interested in what flags a specific option, lets say \textbf{core2}, will activate check by
-\begin{lstlisting}[style=BashInputUser]
-user$ gcc -c -Q -march=core2 --help=target
-\end{lstlisting}
-                    
-                    If you are interested how the flags of different options will differ check with:
-\begin{lstlisting}[style=BashInputUser]
-user$ diff \
-            <(gcc -march=native -Q --help=target) \
-            <(gcc -march=core2 -Q --help=target)
-\end{lstlisting}
-                    
-                    \item \textbf{-O2} option: This variable controls the overall level of optimization. $ \mbox{-O}0 $ will turn it off, $ \mbox{-O}1 $ will do most basic. $ \mbox{-O}2 $ is a step up from $ \mbox{-O}1 $ and the recommended level. $ \mbox{-O}3 $ is the highest level, but does not guarantee to improve performance and in some cases can slow down system due to large binaries and increased memory usage.
-                    
-                    \item \textbf{-pipe} option: Is a common flag which makes compilation process much faster.
-                    
-                \end{itemize}
-            
-                \item \textbf{CHOST} variable is passed through the configure step of ebuilds to set the build-host of the system. Note that the Gentoo profile already sets the appropriate CHOST value, and updating it requires insight and experience in build chains. 
+    
+                    \begin{itemize}[label={o}]
+    
+                        \item \textbf{-march=native} option: If the type of CPU is undetermined, or if the user does not know what setting to choose, it is possible use the \textit{-march=native} settings. When this flag is used, GCC will attempt to detect the processor and automatically set appropriate flags for it. \textit{This should not be used when intending to compile packages for different CPUs!}\\
+                        You can find the kind of CPU you have by using
+    \begin{lstlisting}[style=BashInputUser]					
+    user$ cat /proc/cpuinfo					
+    \end{lstlisting}
+                        
+                        If you are interested in what flags a specific option, lets say \textbf{core2}, will activate check by
+    \begin{lstlisting}[style=BashInputUser]
+    user$ gcc -c -Q -march=core2 --help=target
+    \end{lstlisting}
+                        
+                        If you are interested how the flags of different options will differ check with:
+    \begin{lstlisting}[style=BashInputUser]
+    user$ diff \
+                <(gcc -march=native -Q --help=target) \
+                <(gcc -march=core2 -Q --help=target)
+    \end{lstlisting}
+                        
+                        \item \textbf{-O2} option: This variable controls the overall level of optimization. $ \mbox{-O}0 $ will turn it off, $ \mbox{-O}1 $ will do most basic. $ \mbox{-O}2 $ is a step up from $ \mbox{-O}1 $ and the recommended level. $ \mbox{-O}3 $ is the highest level, but does not guarantee to improve performance and in some cases can slow down system due to large binaries and increased memory usage.
+                        
+                        \item \textbf{-pipe} option: Is a common flag which makes compilation process much faster.
+                        
+                    \end{itemize}
                 
+                    \item \textbf{CHOST} variable is passed through the configure step of ebuilds to set the build-host of the system. Note that the Gentoo profile already sets the appropriate CHOST value, and updating it requires insight and experience in build chains. 
+                    
 \lstinputlisting[linerange={12-12}, firstnumber=12, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                \item \textbf{ACCEPT\_KEYWORDS} defines globally, for all packages, on one hand the architecture, in our case it is \textbf{amd64}, since we have x86\_64, but it could have been \textbf{arm}; and if we are to use stable or unstable \textbf{$ \sim $} packages. In our case we want only stable packages for x86\_64. \href{https://wiki.gentoo.org/wiki/ACCEPT_KEYWORDS}{more detail on accept\_keywords}
-                
+                    
+                    \item \textbf{ACCEPT\_KEYWORDS} defines globally, for all packages, on one hand the architecture, in our case it is \textbf{amd64}, since we have x86\_64, but it could have been \textbf{arm}; and if we are to use stable or unstable \textbf{$ \sim $} packages. In our case we want only stable packages for x86\_64. \href{https://wiki.gentoo.org/wiki/ACCEPT_KEYWORDS}{more detail on accept\_keywords}
+                    
 \lstinputlisting[linerange={17-17}, firstnumber=17, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-
-                \item \textbf{MAKEOPTS} specify arguments passed to \textit{make} when packages are built from source. \href{https://wiki.gentoo.org/wiki/MAKEOPTS}{More info here}
-                \footnote{ \label{jobs-load-ref1} \href{https://lists.gt.net/gentoo/user/269934}{more detail on load average link1}}
-                \footnote{\label{jobs-load-ref2} \href{http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages}{more detail on load average link2}}
-                \footnote{\label{jobs-load-ref3} \href{https://blogs.gentoo.org/ago/2013/01/14/makeopts-jcore-1-is-not-the-best-optimization/}{more detail on load average link3}}
-                \footnote{\label{jobs-load-ref4} \href{https://www.preney.ca/paul/archives/341}{more detail on load average link4}}
-                
+    
+                    \item \textbf{MAKEOPTS} specify arguments passed to \textit{make} when packages are built from source. \href{https://wiki.gentoo.org/wiki/MAKEOPTS}{More info here}
+                    \footnote{ \label{jobs-load-ref1} \href{https://lists.gt.net/gentoo/user/269934}{more detail on load average link1}}
+                    \footnote{\label{jobs-load-ref2} \href{http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages}{more detail on load average link2}}
+                    \footnote{\label{jobs-load-ref3} \href{https://blogs.gentoo.org/ago/2013/01/14/makeopts-jcore-1-is-not-the-best-optimization/}{more detail on load average link3}}
+                    \footnote{\label{jobs-load-ref4} \href{https://www.preney.ca/paul/archives/341}{more detail on load average link4}}
+                    
 \lstinputlisting[linerange={19-19}, firstnumber=19, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                \begin{itemize}[label={o}]
                     
-                    \item \textbf{--jobs=4} defines how many parallel sessions to trigger, if they are possible. The recommended value is the number of logical processors in the CPU. You can obtain that number with the following command
+                    \begin{itemize}[label={o}]
+                        
+                        \item \textbf{--jobs=4} defines how many parallel sessions to trigger, if they are possible. The recommended value is the number of logical processors in the CPU. You can obtain that number with the following command
+                        
+    \begin{lstlisting}[style=BashInputUser]
+    user$ nproc --all
+    \end{lstlisting}
+                        
+                        \item \textbf{--load-average=3.8} option: This option prevents starting new installations if the load-average is more than $ 3.8 $. It is recommend your load-average to be as much as the number of logical CPU.
+                        
+                    \end{itemize}     
                     
-\begin{lstlisting}[style=BashInputUser]
-user$ nproc --all
-\end{lstlisting}
-                    
-                    \item \textbf{--load-average=3.8} option: This option prevents starting new installations if the load-average is more than $ 3.8 $. It is recommend your load-average to be as much as the number of logical CPU.
-                    
-                \end{itemize}     
-                
-                \item \textbf{EMERGE\_DEFAULT\_OPTS} specify arguments passed to \textit{emerge}. \href{https://wiki.gentoo.org/wiki/EMERGE_DEFAULT_OPTS}{More info here} See previous footnotes for details on load average and parallelism. 
-                \footnote{ See footnote \ref{jobs-load-ref1}}
-                \footnote{ See footnote \ref{jobs-load-ref2}}
-                \footnote{ See footnote \ref{jobs-load-ref3}}
-                \footnote{ See footnote \ref{jobs-load-ref4}} 
-
+                    \item \textbf{EMERGE\_DEFAULT\_OPTS} specify arguments passed to \textit{emerge}. \href{https://wiki.gentoo.org/wiki/EMERGE_DEFAULT_OPTS}{More info here} See previous footnotes for details on load average and parallelism. 
+                    \footnote{ See footnote \ref{jobs-load-ref1}}
+                    \footnote{ See footnote \ref{jobs-load-ref2}}
+                    \footnote{ See footnote \ref{jobs-load-ref3}}
+                    \footnote{ See footnote \ref{jobs-load-ref4}} 
+    
 \lstinputlisting[linerange={20-20}, firstnumber=20, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-            
-                \begin{itemize}[label={o}]
-                    \item \textbf{--jobs=4} sets the amount of parallel packages to emerge. Note that if you have set \textbf{makeopts -j N} and \textbf{emerge\_default\_opts -j K} you will end up with $ N*K $ tasks! The recommended value is the number of logical processors in the CPU.
-                    
-                    \item \textbf{--load-average=3.8} prevents starting new instance of emerge if the load-average is more than $ 3.8 $. Rule of thumb is set it as much as the number of logical CPU.
-                    
-                    \item \textbf{--with-bdeps y} option: By default, the dependency graph may not include some packages. If you would like to include such build time dependencies even though they are not strictly required. \href{https://wiki.gentoo.org/wiki/Project:Portage/FAQ\#Why_is_it_that_emerge_does_not_update_all_packages.3F}{more detail on emerge\_default\_opts with-bdeps option}
-                    
-                    \item \textbf{--quiet-build y} option: Redirect all build output to logs alone, and do not display it on stdout. If a build failure occurs for a single package, the build log will be automatically displayed on stdout (unless the --quiet-fail option is enabled)
-                    
-                    \item \textbf{--keep-going} option: Continue as much as possible after an error. When an error occurs, dependencies are recalculated for remaining packages and any with unsatisfied dependencies are automatically dropped.
-                    
-                    \item \textbf{--autounmask-write y} option: If --autounmask is enabled, changes are written to config files, respecting CONFIG\_PROTECT and --ask. If the corresponding package.* is a file, the changes are appended to it, if it is a directory, changes are written to the lexicographically last file.
-                    
-                \end{itemize}
-            
-                \item \textbf{FEATURES} variable specifies options which affect how Portage operates and how packages are compiled. It has some predefined options, depending on what profile has been set, but this is an incremental variable, thus values can be added without directly overriding the default ones. \href{https://dev.gentoo.org/~zmedico/portage/doc/man/make.conf.5.html}{Man page of emerge all \textit{Feature} variables with explanation}
                 
+                    \begin{itemize}[label={o}]
+                        \item \textbf{--jobs=4} sets the amount of parallel packages to emerge. Note that if you have set \textbf{makeopts -j N} and \textbf{emerge\_default\_opts -j K} you will end up with $ N*K $ tasks! The recommended value is the number of logical processors in the CPU.
+                        
+                        \item \textbf{--load-average=3.8} prevents starting new instance of emerge if the load-average is more than $ 3.8 $. Rule of thumb is set it as much as the number of logical CPU.
+                        
+                        \item \textbf{--with-bdeps y} option: By default, the dependency graph may not include some packages. If you would like to include such build time dependencies even though they are not strictly required. \href{https://wiki.gentoo.org/wiki/Project:Portage/FAQ\#Why_is_it_that_emerge_does_not_update_all_packages.3F}{more detail on emerge\_default\_opts with-bdeps option}
+                        
+                        \item \textbf{--quiet-build y} option: Redirect all build output to logs alone, and do not display it on stdout. If a build failure occurs for a single package, the build log will be automatically displayed on stdout (unless the --quiet-fail option is enabled)
+                        
+                        \item \textbf{--keep-going} option: Continue as much as possible after an error. When an error occurs, dependencies are recalculated for remaining packages and any with unsatisfied dependencies are automatically dropped.
+                        
+                        \item \textbf{--autounmask-write y} option: If --autounmask is enabled, changes are written to config files, respecting CONFIG\_PROTECT and --ask. If the corresponding package.* is a file, the changes are appended to it, if it is a directory, changes are written to the lexicographically last file.
+                        
+                    \end{itemize}
+                
+                    \item \textbf{FEATURES} variable specifies options which affect how Portage operates and how packages are compiled. It has some predefined options, depending on what profile has been set, but this is an incremental variable, thus values can be added without directly overriding the default ones. \href{https://dev.gentoo.org/~zmedico/portage/doc/man/make.conf.5.html}{Man page of emerge all \textit{Feature} variables with explanation}
+                    
 \lstinputlisting[linerange={22-22}, firstnumber=22, language=LinuxConfigFiles]{sample_configs/make.conf_example}
+                    
+                    \begin{itemize}[label={o}]
+                        \item \textbf{parallel-install} option: Use finer-grained locks when installing packages, allowing for greater parallelization. For additional parallelization.
+                        
+                        \item \textbf{multilib-strict} option: Many Makefiles assume that their libraries should go to /usr/lib, or \$(prefix)/lib. This assumption can cause a serious mess if /usr/lib isn't a symlink to /usr/lib64. To find the bad packages, we have a portage feature called multilib-strict. It will prevent emerge from putting 64bit libraries into anything other than (/usr)/lib64.
+                        
+                        \item \textbf{candy} Enable a special progress indicator when emerge calculates dependencies.
+                        
+                    \end{itemize}
                 
-                \begin{itemize}[label={o}]
-                    \item \textbf{parallel-install} option: Use finer-grained locks when installing packages, allowing for greater parallelization. For additional parallelization.
+                    \item \textbf{AUTOCLEAN} enables portage to automatically clean out older or overlapping packages from the system after every successful merge. This is the same as running 'emerge -c' after every merge. Set with: "yes" or "no", recommended "yes" since can cause serious problems due overlapping packages.
                     
-                    \item \textbf{multilib-strict} option: Many Makefiles assume that their libraries should go to /usr/lib, or \$(prefix)/lib. This assumption can cause a serious mess if /usr/lib isn't a symlink to /usr/lib64. To find the bad packages, we have a portage feature called multilib-strict. It will prevent emerge from putting 64bit libraries into anything other than (/usr)/lib64.
-                    
-                    \item \textbf{candy} Enable a special progress indicator when emerge calculates dependencies.
-                    
-                \end{itemize}
-            
-                \item \textbf{AUTOCLEAN} enables portage to automatically clean out older or overlapping packages from the system after every successful merge. This is the same as running 'emerge -c' after every merge. Set with: "yes" or "no", recommended "yes" since can cause serious problems due overlapping packages.
-                
 \lstinputlisting[linerange={23-23}, firstnumber=23, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                \item \textbf{CPU\_FLAGS\_X86} enables specific instructions for the architecture/cpu. \href{https://wiki.gentoo.org/wiki/CPU_FLAGS_X86}{More info}
-                
+                    
+                    \item \textbf{CPU\_FLAGS\_X86} enables specific instructions for the architecture/cpu. \href{https://wiki.gentoo.org/wiki/CPU_FLAGS_X86}{More info}
+                    
 \lstinputlisting[linerange={24-24}, firstnumber=24, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-
-                    \paragraph{} The easiest way to obtain the flags is by using \textit{cpuinfo2cpuflags-x86}
-     
+    
+                        \paragraph{} The easiest way to obtain the flags is by using \textit{cpuinfo2cpuflags-x86}
+         
 \begin{lstlisting}[style=BashInputCHRoot]
  CHroot# emerge -v app-portage/cpuid2cpuflags && \
      cpuinfo2cpuflags-x86 >> /etc/portage/make.conf
 \end{lstlisting}
-                
-                \item \textbf{PYTHON\_TARGETS} controls support for various Python implementations in packages. \href{https://wiki.gentoo.org/wiki/Project:Python/PYTHON_TARGETS}{More info}
-                
+                    
+                    \item \textbf{PYTHON\_TARGETS} controls support for various Python implementations in packages. \href{https://wiki.gentoo.org/wiki/Project:Python/PYTHON_TARGETS}{More info}
+                    
 \lstinputlisting[linerange={25-25}, firstnumber=25, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-
-                \item \textbf{VIDEO\_CARDS} sets the video drivers that you intend to use. Will talk about kernel configs later on. \href{https://wiki.gentoo.org/wiki/Xorg/Guide#make.conf}{More info}
-                
+    
+                    \item \textbf{VIDEO\_CARDS} sets the video drivers that you intend to use. Will talk about kernel configs later on. \href{https://wiki.gentoo.org/wiki/Xorg/Guide#make.conf}{More info}
+                    
 \lstinputlisting[linerange={27-27}, firstnumber=27, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                \item \textbf{INTEL\_MODESETTING} sets the usage of GLAMOR to accelerate 2D graphical over Mesa. It is intel specific thing, since \textit{Intel DDX driver} has been slowly deprecating, it is recommend to use \textit{modesetting DDX driver}. \href{https://wiki.gentoo.org/wiki/Intel#Modesetting_DDX}{More info}
-                
+                    
+                    \item \textbf{INTEL\_MODESETTING} sets the usage of GLAMOR to accelerate 2D graphical over Mesa. It is intel specific thing, since \textit{Intel DDX driver} has been slowly deprecating, it is recommend to use \textit{modesetting DDX driver}. \href{https://wiki.gentoo.org/wiki/Intel#Modesetting_DDX}{More info}
+                    
 \lstinputlisting[linerange={28-28}, firstnumber=28, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                \item \textbf{INPUT\_DEVICES} sets drivers for input devices. Kernel configs are later. \href{https://wiki.gentoo.org/wiki/Evdev#Driver}{evdev is responsible for keyboards, mice, joysticks, etc...}. \href{https://wiki.gentoo.org/wiki/Synaptics#Driver}{synaptics is responsible for touchpads}
-                
+                    
+                    \item \textbf{INPUT\_DEVICES} sets drivers for input devices. Kernel configs are later. \href{https://wiki.gentoo.org/wiki/Evdev#Driver}{evdev is responsible for keyboards, mice, joysticks, etc...}. \href{https://wiki.gentoo.org/wiki/Synaptics#Driver}{synaptics is responsible for touchpads}
+                    
 \lstinputlisting[linerange={30-30}, firstnumber=30, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                \item \textbf{L10N, LINGUAS} are localization variables. \textit{L10N} will replace the \textit{LINGUAS} in future, but for compatibility reasons should set them both for the moment. \href{https://wiki.gentoo.org/wiki/Localization/Guide#LINGUAS}{More info for LINGUAS} and \href{https://wiki.gentoo.org/wiki/Localization/Guide#L10N}{More info for L10N} and \href{https://www.gentoo.org/support/news-items/2016-06-23-l10n-use_expand.html}{More info about the replacement}
-                
+                    
+                    \item \textbf{L10N, LINGUAS} are localization variables. \textit{L10N} will replace the \textit{LINGUAS} in future, but for compatibility reasons should set them both for the moment. \href{https://wiki.gentoo.org/wiki/Localization/Guide#LINGUAS}{More info for LINGUAS} and \href{https://wiki.gentoo.org/wiki/Localization/Guide#L10N}{More info for L10N} and \href{https://www.gentoo.org/support/news-items/2016-06-23-l10n-use_expand.html}{More info about the replacement}
+                    
 \lstinputlisting[linerange={32-33}, firstnumber=32, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                \item \textbf{SOUND} variable is to define use-flags related to sound. Its only entry is the necessary use flag for \href{https://wiki.gentoo.org/wiki/PulseAudio#Software}{\textit{PulseAudio} - sound server that provides a number of features on top of ALSA(most importantly - youtube with sound)} Kernel configs are for further. 
-                
+                    
+                    \item \textbf{SOUND} variable is to define use-flags related to sound. Its only entry is the necessary use flag for \href{https://wiki.gentoo.org/wiki/PulseAudio#Software}{\textit{PulseAudio} - sound server that provides a number of features on top of ALSA(most importantly - youtube with sound)} Kernel configs are for further. 
+                    
 \lstinputlisting[linerange={35-35}, firstnumber=35, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                   
-                \item \textbf{NETWORK} variable is to define use-flags related to network. Its only entry is the necessary use flag for \href{https://wiki.gentoo.org/wiki/NetworkManager#Installation}{NetworkManager}. More on kernel config later on.
-                
+                       
+                    \item \textbf{NETWORK} variable is to define use-flags related to network. Its only entry is the necessary use flag for \href{https://wiki.gentoo.org/wiki/NetworkManager#Installation}{NetworkManager}. More on kernel config later on.
+                    
 \lstinputlisting[linerange={36-36}, firstnumber=36, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-
-                \item \textbf{FONTS} variable is to define use-flags related to fonts config. \href{http://kev009.com/wp/2009/12/getting-beautiful-fonts-in-gentoo-linux/}{they are recommended from here}, although I am not following the full article any more. More info later on. 
-                
+    
+                    \item \textbf{FONTS} variable is to define use-flags related to fonts config. \href{http://kev009.com/wp/2009/12/getting-beautiful-fonts-in-gentoo-linux/}{they are recommended from here}, although I am not following the full article any more. More info later on. 
+                    
 \lstinputlisting[linerange={37-37}, firstnumber=37, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-
-                \item \textbf{GUI} variable to define use-flags related to GUI - such as gtk, qt and similar. In general I prefer qt over gtk, but above all I want all of them to look alike. Since my last installation I noticed that including both \textit{qt4} and \textit{qt5} I could not achieve that, but more details later.
-                
+    
+                    \item \textbf{GUI} variable to define use-flags related to GUI - such as gtk, qt and similar. In general I prefer qt over gtk, but above all I want all of them to look alike. Since my last installation I noticed that including both \textit{qt4} and \textit{qt5} I could not achieve that, but more details later.
+                    
 \lstinputlisting[linerange={38-38}, firstnumber=38, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-
-                \item \textbf{MISC} misc use flags
-                
+    
+                    \item \textbf{MISC} misc use flags
+                    
 \lstinputlisting[linerange={39-39}, firstnumber=39, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-
-                \item \textbf{USE} use variable is the keyword, which use flags. Since it permits the usage of variables I did so and the final result is
-                
+    
+                    \item \textbf{USE} use variable is the keyword, which use flags. Since it permits the usage of variables I did so and the final result is
+                    
 \lstinputlisting[linerange={41-41}, firstnumber=41, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                \item \textbf{GENTOO\_MIRRORS} is setting the mirrors. 
-                
+                    
+                    \item \textbf{GENTOO\_MIRRORS} is setting the mirrors. 
+                    
 \lstinputlisting[linerange={50-50}, firstnumber=50, language=LinuxConfigFiles]{sample_configs/make.conf_example}
-                
-                    \paragraph{} Let \textit{mirrorselect} to do the job for you with the following command:
-                
+                    
+                        \paragraph{} Let \textit{mirrorselect} to do the job for you with the following command:
+                    
 \begin{lstlisting}[style=BashInputCHRoot]
  CHroot# emerge -v mirrorselect && \
      mirrorselect --servers 5
 \end{lstlisting}            
-    
-        \end{itemize}
-	
+        
+                \end{itemize}
+            
+            \newpage
+            \subsubsection{Configure timezone and locales}
+            
+                \begin{enumerate}
+                    \item  \href{https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Timezone}{Timezone}
+                    
+                        \paragraph{} Available timezones are placed into \textit{/usr/share/zoneinfo/}, and you need to write them in the \textit{/etc/timezone} file and then you should reconfigure  sys-libs/timezone-data Lets say your capital is Sofia, so
+                        
+\begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# echo $(find /usr/share/zoneinfo/ -name "Sofia" \
+         | cut -d"/" -f5-) \
+         > /etc/timezone \
+         && emerge -v sys-libs/timezone-data \
+         && emerge --config sys-libs/timezone-data
+\end{lstlisting}
+                    
+                    \newpage
+                    \item   \href{https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Base#Configure_locales}{Locals}
+                    
+                    \paragraph{} specify not only the language, but also what the rules are for sorting strings, displaying dates and times etc. Available combinations of locale are placed at \textit{/usr/share/i18n/SUPPORTED}, for my case I want to see combinations of \textit{bg}, so
+                    
+\begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# cat /usr/share/i18n/SUPPORTED | grep bg
+ bg_BG.UTF-8 UTF-8
+ bg_BG CP1251
+\end{lstlisting}             
+                    
+                    \paragraph{} Now to specify wanted locals we shall edit \textit{/etc/locale.gen}. Add the ones we want, if missing, or comment/uncomment depending on our needs.
+                    
+\lstinputlisting[linerange={16-18,23-28}, firstnumber=16, language=LinuxConfigFiles]{sample_configs/locale.gen_example}
+                    
+                    \paragraph{} Last step is to generate the locals with
+                    
+\begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# locale-gen
+\end{lstlisting}      
+                    
+                    \paragraph{} Finally lets set the system-wide locale. In near future will set link to a nice article about all those variables and why I chose \textit{C}
+
+\begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# eselect locale list
+ Available targets for the LANG variable:
+ [1]   C
+ [2]   POSIX
+ [3]   bg_BG
+ [4]   bg_BG.cp1251
+ [5]   bg_BG.utf8
+ [6]   en_US
+ [7]   en_US.iso88591
+ [8]   en_US.utf8
+ CHroot# eselect locale set 1
+\end{lstlisting}                        
+                    
+                \end{enumerate}
+
+        \newpage
+        \subsection{Kernel configuration}
+            
+            \paragraph{} Despite the method you choose run
+
+\begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va sys-kernel/gentoo-sources sys-kernel/linux-firmware
+\end{lstlisting}
+            
+            \newpage 
+            \subsubsection{Easy way - genkernel}
+            
+                \paragraph{} Alternative to manual configuration is using genkernel\href{https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Optional:_Building_an_initramfs}{,click the link for more info.}
+\begin{lstlisting}[style=BashInputCHRoot]
+CHroot# emerge -va sys-kernel/gentoo-sources sys-kernel/linux-firmware
+\end{lstlisting}            
+            
 \end{document}
