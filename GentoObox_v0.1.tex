@@ -33,7 +33,8 @@
 %	stringstyle=\color{mymauve},     % string literal style
 %	tabsize=2,	                   % sets default tabsize to 2 spaces
 %	title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
-    linewidth=\linewidth,	
+    linewidth=\linewidth,
+    breaklines=true	
 }
 
 \lstdefinestyle{BashInputCHRoot}{
@@ -42,6 +43,7 @@
 	language=Bash,                 
 	literate={CHroot\#}{{\textcolor{red}{CHroot \#}}}7,
     linewidth=\linewidth,
+    breaklines=true
 }
 
 \lstdefinestyle{BashInputUser}{
@@ -50,12 +52,14 @@
 	language=Bash,                
 	literate={user\$}{{\textcolor{green}{user \$}}}7,
 	linewidth=\linewidth,
+    breaklines=true
 }
 
 \lstdefinestyle{KernelConfig}{
 	backgroundcolor=\color{lightgray},
 	basicstyle=\ttfamily\color{black},
 	linewidth=\linewidth,
+    breaklines=true
 }
 
 \definecolor{eclipseBlue}{RGB}{42,0.0,255}
@@ -538,9 +542,394 @@ root# export PS1="CH${PS1}"
             \newpage 
             \subsubsection{Easy way - genkernel}
             
-                \paragraph{} Alternative to manual configuration is using genkernel\href{https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Optional:_Building_an_initramfs}{,click the link for more info.}
+                \paragraph{} Alternative to manual configuration is using genkernel\href{https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Alternative:_Using_genkernel}{,click the here for more info.}
 \begin{lstlisting}[style=BashInputCHRoot]
-CHroot# emerge -va sys-kernel/gentoo-sources sys-kernel/linux-firmware
-\end{lstlisting}            
-            
+ CHroot# emerge -va sys-kernel/genkernel && genkernel all
+\end{lstlisting}
+                
+                \paragraph{} This process should take a while and you are done with your kernel config.
+                
+            \newpage
+            \subsubsection{Hard way - manual configuration}
+                
+                \paragraph{} Important note: I will not use modules since \href{https://wiki.gentoo.org/wiki/Kernel/Gentoo_Kernel_Configuration_Guide#Modules_do_not_get_loaded_automatically}{they make life harder.}
+                
+                \paragraph{} Manual configuration is much easier with \textit{lspci} which is included into \textit{pciutils}. This command will identify PCI-based and AGP-based hardware and help us to find the driver into the kernel.
+                
+\begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va sys-apps/pciutils
+\end{lstlisting}
+                
+                \paragraph{} Our first step is to see our hardware and drivers in use. Remember that I presume we are installing Gentoo using an live medium, thus I presume that most or even all the hardware is working. This means that the live usb has successfully recognized and loaded the modules we need to compile. To see which modules are in use and for which device we simply
+
+                \begin{lstlisting}[style=BashInputRoot]
+ root# lspci -k
+ 00:00.0 Host bridge: Intel Corporation Xeon E3-1200 v3/4th Gen Core Processor DRAM Controller (rev 06)
+ Subsystem: Lenovo Xeon E3-1200 v3/4th Gen Core Processor DRAM Controller
+ 00:02.0 VGA compatible controller: Intel Corporation 4th Gen Core Processor Integrated Graphics Controller (rev 06)
+ Subsystem: Lenovo 4th Gen Core Processor Integrated Graphics Controller
+ Kernel driver in use: i915
+ Kernel modules: i915
+ 00:03.0 Audio device: Intel Corporation Xeon E3-1200 v3/4th Gen Core Processor HD Audio Controller (rev 06)
+ Subsystem: Lenovo Xeon E3-1200 v3/4th Gen Core Processor HD Audio Controller
+ Kernel driver in use: snd_hda_intel
+ Kernel modules: snd_hda_intel
+ 00:14.0 USB controller: Intel Corporation 8 Series/C220 Series Chipset Family USB xHCI (rev 04)
+ Subsystem: Lenovo 8 Series/C220 Series Chipset Family USB xHCI
+ Kernel driver in use: xhci_hcd
+ Kernel modules: xhci_pci
+ 00:16.0 Communication controller: Intel Corporation 8 Series/C220 Series Chipset Family MEI Controller #1 (rev 04)
+ Subsystem: Lenovo 8 Series/C220 Series Chipset Family MEI Controller
+ 00:1a.0 USB controller: Intel Corporation 8 Series/C220 Series Chipset Family USB EHCI #2 (rev 04)
+ Subsystem: Lenovo 8 Series/C220 Series Chipset Family USB EHCI
+ Kernel driver in use: ehci-pci
+ 00:1b.0 Audio device: Intel Corporation 8 Series/C220 Series Chipset High Definition Audio Controller (rev 04)
+ Subsystem: Lenovo 8 Series/C220 Series Chipset High Definition Audio Controller
+ Kernel driver in use: snd_hda_intel
+ Kernel modules: snd_hda_intel
+ 00:1c.0 PCI bridge: Intel Corporation 8 Series/C220 Series Chipset Family PCI Express Root Port #1 (rev d4)
+ Kernel driver in use: pcieport
+ 00:1c.2 PCI bridge: Intel Corporation 8 Series/C220 Series Chipset Family PCI Express Root Port #3 (rev d4)
+ Kernel driver in use: pcieport
+ 00:1c.3 PCI bridge: Intel Corporation 8 Series/C220 Series Chipset Family PCI Express Root Port #4 (rev d4)
+ Kernel driver in use: pcieport
+ 00:1c.4 PCI bridge: Intel Corporation 8 Series/C220 Series Chipset Family PCI Express Root Port #5 (rev d4)
+ Kernel driver in use: pcieport
+ 00:1d.0 USB controller: Intel Corporation 8 Series/C220 Series Chipset Family USB EHCI #1 (rev 04)
+ Subsystem: Lenovo 8 Series/C220 Series Chipset Family USB EHCI
+ Kernel driver in use: ehci-pci
+ 00:1f.0 ISA bridge: Intel Corporation HM87 Express LPC Controller (rev 04)
+ Subsystem: Lenovo HM87 Express LPC Controller
+ Kernel driver in use: lpc_ich
+ Kernel modules: lpc_ich
+ 00:1f.2 SATA controller: Intel Corporation 8 Series/C220 Series Chipset Family 6-port SATA Controller 1 [AHCI mode] (rev 04)
+ Subsystem: Lenovo 8 Series/C220 Series Chipset Family 6-port SATA Controller 1 [AHCI mode]
+ Kernel driver in use: ahci
+ Kernel modules: ahci
+ 00:1f.3 SMBus: Intel Corporation 8 Series/C220 Series Chipset Family SMBus Controller (rev 04)
+ Subsystem: Lenovo 8 Series/C220 Series Chipset Family SMBus Controller
+ Kernel driver in use: i801_smbus
+ Kernel modules: i2c_i801
+ 02:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS5227 PCI Express Card Reader (rev 01)
+ Subsystem: Lenovo RTS5227 PCI Express Card Reader
+ 03:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 10)
+ Subsystem: Lenovo RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller
+ Kernel driver in use: r8169
+ Kernel modules: r8169
+ 04:00.0 Network controller: Intel Corporation Wireless 7260 (rev 73)
+ Subsystem: Intel Corporation Wireless-N 7260
+ Kernel driver in use: iwlwifi
+ Kernel modules: iwlwifi
+                \end{lstlisting}
+                
+                \paragraph{} So lets make a list
+                \begin{enumerate}
+                    \item VGA compatible controller (video card) uses kernel module \textbf{i915}
+                    \item Audio device, integrated HD Audio controller uses kernel module \textbf{snd\_hda\_intel}
+                    \item USB controller: uses kernel modules\textbf{xhci\_pci}
+                    \item PCI bridge: \textbf{pcieport}
+                    \item isa bridge: \textbf{lpc\_ich}
+                    \item sata controller: \textbf{ahci}
+                    \item smbus: \textbf{i2c\_i801}
+                    \item ethernet controller: \textbf{r8169}
+                    \item network controller (wifi): \textbf{iwlwifi}
+                \end{enumerate}
+                
+                \paragraph{} Now lets go to the kernel menu
+                
+                \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# cd /usr/src/linux && make menuconfig
+                \end{lstlisting}
+                
+                \paragraph{} If we want to search for any module/driver/config, we simply press \textbf{/} and type what we are searching. For example when we search for \textbf{i915}, we get something like
+                
+                \begin{lstlisting}[style=KernelConfig]
+ Symbol: DRM_I915 [=y]
+ Type: tristate
+ Prompt: Intel8xx/9xx/G3x/G4x/HD Graphics
+ Location:
+     -> Device Drivers
+         -> Graphics Support
+ Defined at drivers/gpu/drm/i915/Kconfig:1
+ Dpends on: HAS_IOMEM [=y] && DRM [=y] && X86 [=y] && PCI [=y]
+ Slectts: INTEL_GTT [=y] && INTERVAL_TREE [=y] && SHMEM [=y] && TMPFS [=y] ...
+                \end{lstlisting}
+                
+                \paragraph{} This tells us we can find the current driver under Device Drivers $ \rightarrow $ Graphics Support $ \rightarrow $ Intel8xx/9xx/G3x/G4x/HD Graphics and we can check for its presents in the current kernel(of the live medium) with:
+                
+                \begin{lstlisting}[style=BashInputRoot]
+root# zcat /proc/config.gz | grep CONFIG_DRM_I915
+ CONFIG_DRM_I915=m
+ # CONFIG_DRM_I915_ALPHA_SUPPORT is not set
+ CONFIG_DRM_I915_CAPTURE_ERROR=y
+ CONFIG_DRM_I915_COMPRESS_ERROR=y
+ CONFIG_DRM_I915_USERPTR=y
+ # CONFIG_DRM_I915_GVT is not set
+                \end{lstlisting}
+                
+                \paragraph{} I will try to include only the stuff which, should be checked, but not include the stuff which is checked by default, so a little mess and that is the problem with kernel configuration... In the future will think of a way to edit this... For now press \textit{h} and have petitions.
+                
+                \newpage
+                \begin{enumerate}
+                    \item \textbf{i915}
+                    
+                    \paragraph{} \href{https://wiki.gentoo.org/wiki/Intel#Kernel}{Lets not forget our guide}. We already saw that the location for that driver is at \textit{Device Drivers $ \rightarrow $ Graphics Support $ \rightarrow $ Intel8xx/9xx/G3x/G4x/HD Graphics} so we go there and check it 
+                    
+                    \begin{lstlisting}[style=KernelConfig]
+ ...
+ <*> /dev/agpgart (AGP Support)
+     <*> Intel 440LX/BX/GX, I8xx and E7x05 chipset support
+ ...
+ (2)   Maximum number of GPUs
+ ...
+ <*> Direct Rendering Manager (XFree86 4.1.0 and higher DRI support)
+     [*]   Enable legacy fbdev support for your modesetting driver (NEW)
+     (100)   Overallocation of the fbdev buffer (NEW)
+ ...
+ <*> Intel 8xx/9xx/G3x/G4x/HD Graphics 
+     [*] Enable capturing GPU state following a hang (NEW)
+     [*]    Compress GPU error state (NEW)
+     [*] Always enable userptr support (NEW) 
+ ...
+ <*> Backlight & LCD device support
+     <*> Generic (aka Sharp Corgi) Backlight Driver (NEW)
+ ...
+ <*> VGA text console
+     [*] Enable Scrollback Buffer in System RAM
+     (64)    Scrollback Buffer Size (in KB) (NEW)
+     (80) Initial number of console screen columns (NEW)
+     (25) Initial number of console screen rows (NEW)
+     -*- Framebuffer Console support
+     -*-   Map the console to the primary display device
+ ...
+ <*> Bootup logo    
+     [*]   Standard 224-color Linux logo (NEW)
+ ...
+                   \end{lstlisting}
+                    
+                   \newpage
+                   \item \textbf{snd\_hda\_intel}
+                   
+                   \paragraph{} We will config the kernel for \href{https://wiki.gentoo.org/wiki/ALSA#Kernel}{\textit{alsa}}  and \href{https://wiki.gentoo.org/wiki/PulseAudio#Kernel}{\textit{pulseaudio}} simultaneously. Lets navigate to \textit{Device Drivers $ \rightarrow $ Sound card support $ \rightarrow $ Advanced Linux Sound Architecture} 
+                   
+                   \begin{lstlisting}[style=KernelConfig]
+ ...
+ [*]  PCI sound devices
+ ...
+ HD-Audio
+     <*> HD Audio PCI
+     <*> Build HDMI/DisplayPort HD-audio codec support
+     <*> Build Conexant HD-audio codec support
+ ...
+ Advanced Linux Sound Architecture
+     (2048) Pre-allocated buffer size for HD-audio driver
+
+ # For microphone
+     USB sound devices
+         <*> USB Audio/MID driver
+ ...
+ # Should be already checked in
+ General setup
+     [*] System V IPC
+                   \end{lstlisting}
+                   
+                   \newpage
+                   \item \textbf{USB controllers}  \href{https://wiki.gentoo.org/wiki/USB/Guide#Config_options_for_the_kernel}{following this article}
+                   
+                   \begin{lstlisting}[style=KernelConfig]
+ ...
+ Device Drivers
+     SCSI device support
+         ---   SCSI support type (disk, tape, CD-ROM)
+         <*>   SCSI disk support
+ ...
+ Device Drivers
+     [*] USB support
+         <*> xHCI HCD
+         <*> EHCI HCD
+         <*> OHCI HCD
+         <*> UHCI HCD
+         <*> USB printer support
+         <*> SUB mass storage support
+ ...
+ Device Drivers
+     HID support
+         <*> Generic HID driver
+ ...
+ Device Drivers
+     HID support
+         Special HID drivers
+             <*> Lenovov/Thinkpad devices  # since I have thikpad e440, all the rest are deselected
+ ...
+                   \end{lstlisting}
+                   
+                   \newpage
+                   \item \textbf{pcieport} should be already set, and the other stuff I have no idea about :-)
+                   
+                   \begin{lstlisting}[style=KernelConfig]
+ Symbol: PCIEPORTBUS [=y]
+ Type: boolean
+ Prompt: PCI Express Port Bus support
+ Location:
+     Bus options
+         PCI support:
+                   \end{lstlisting}
+                   
+                   \newpage
+                   \item \textbf{lpc\_ich} was not set by default, so lets set it 
+                   
+                   \begin{lstlisting}[style=KernelConfig]
+ Device Drivers
+     Multifunction devices drivers
+         <*> Intel ICH LPC
+                   \end{lstlisting}
+                   
+                   \newpage
+                   \item \textbf{ahci} is for the HDD, \href{https://wiki.gentoo.org/wiki/HDD#Kernel}{so lets follow this article} Since I have no idea, I will check all of what they have and leave the research for later.
+                   
+                   \begin{lstlisting}[style=KernelConfig]
+ Device Drivers
+     <*> Serial ATA and Parallel ATA drivers
+     [*] ATA ACPI Support
+ 
+ # If the drive is connected to a SATA Port Multiplier:
+     [*] SATA Port Multiplier support
+ 
+ # Select the driver for the SATA controller, e.g.:
+     <*> AHCI SATA support (ahci)
+ 
+ # If the drive is connected to an IDE controller:
+     [*] ATA SFF support
+     [*] ATA BMDMA support
+ 
+ # Select the driver for the IDE controller, e.g.:
+     <*> Intel ESB, ICH, PIIX3, PIIX4 PATA/SATA support (ata_piix)
+ 
+ # SCSI device support  ---> 
+     <*> SCSI device support
+     <*> SCSI disk support 
+                   \end{lstlisting}
+                   
+                   \newpage
+                   \item \textbf{i2c\_i801} was enabled by default
+                   \begin{lstlisting}[style=KernelConfig]
+ Symbol: I2C_I801 [=y]
+ Type: tristate
+ Prompt: Intel 82801
+ Location:
+     Devie Drivers
+         I2C support
+             I2C support (I2C [=y])
+                   \end{lstlisting}
+
+                    \newpage
+                    \item \textbf{r8169} \href{https://wiki.gentoo.org/wiki/Ethernet#Kernel}{will follow this article}
+                    
+                    \begin{lstlisting}[style=KernelConfig]
+ Device Drivers
+     Network device support
+         Ethernet driver support
+             [*] Realtek devices
+                 <*> realtek 8169 PCI gigabit ethernet adapter
+                    \end{lstlisting}
+                    
+                    \newpage
+                    \item \textbf{iwlwifi} for the wifi controller and  \href{https://wiki.gentoo.org/wiki/Iwlwifi#Kernel}{follow this article} and \href{https://wiki.gentoo.org/wiki/Wifi#Kernel}{this} also according to \href{https://forums.gentoo.org/viewtopic-p-7640140.html#7640140}{this recommendation} I will set the drivers as modules.
+                    
+                    \begin{lstlisting}[style=KernelConfig]
+ ...
+ Networking support
+     Wireless
+         <*> cfg80211
+             [*] enable ppowersave by default
+             [*] cfg80211 wireless extensions compatibility
+             <*> Generic IEEE 802.11 Networking Stack (mac80211)
+             [*] Default rate control algorithm (Minstrel)
+             -*-   Enable LED triggers
+ ...
+ Device Drivers
+     Network device support
+         Wireless LAN
+             [*] Intel devices
+                 <M>     Intel Wireless WiFi Next Gen AGN - Wireless-N/Advanced-N/Ultimate-N (iwlwifi)  
+                 <M>      Intel Wireless WiFi DVM Firmware support
+                 <M>      Intel Wireless WiFi MVM Firmware support
+ ...
+                  
+                    \end{lstlisting}
+                    
+                \end{enumerate}
+                
+                \newpage
+                \paragraph{} Now lets check if the minimum required options are set \href{https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Activating_required_options}{following this guide}
+                
+                \paragraph{} Enable filesystems
+                
+                \begin{lstlisting}[style=KernelConfig]
+ File systems
+     <*> second extended fs support
+     <*> ext3 fs support
+     <*> ext4 fs support
+     DOS/FAT/NT fylesystems
+         <*> MSDOS fs support
+         <*> VFAT fs support
+         [*] Enable utf-8 option by default
+         <*> NTFS file system support
+         [*] 	debugging
+         []		writing
+                \end{lstlisting}
+                
+                \newpage 
+                \paragraph{} Enable ppp
+                
+                \begin{lstlisting}[style=KernelConfig]
+ Device drivers
+     Network device support
+         <*> PPP support
+             <*> PPP for async
+             <*> PPP for tty 
+                \end{lstlisting}
+                
+                \newpage
+                \paragraph{} Little twiks on the processor following \href{https://wiki.gentoo.org/wiki/Kernel/Gentoo_Kernel_Configuration_Guide#Multiprocessor.2C_Hyper-Threading_and_multi-core_systems}{this guide} and those \href{https://forums.gentoo.org/viewtopic-t-939150-start-0.html}{notes}
+                
+                \begin{lstlisting}[style=KernelConfig]
+ Processor type and features
+     [*] Symmetric multi processing support
+     [*] SMT (Hyperthreading) scheduler support
+     [*] Multi-core scheduler support
+     Processor family (Core 2/newer Xeon)
+                \end{lstlisting}
+                
+                \newpage
+                \paragraph{} After all the work lets compile. 
+                
+                \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# make -j4 && make modules_install && make install
+                \end{lstlisting}
+             
+            \newpage
+            \subsection{Final touches}
+
+                \paragraph{} Host information
+                \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# nano -w /etc/conf.d/hostname
+ # Set the hostname variable to the selected host name
+ hostname="kaktus"
+                \end{lstlisting}
+                
+                \paragraph{} Domain information, in my case no domain should be configured, so to get rid of "This is hostname.(none)" messages at their login screen. This should then be fixed by editing /etc/issue and deleting the string .\O from that file.
+                \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# nano -w /etc/issue
+ # to look like this
+ This is \n (\s \m \r) \t
+                \end{lstlisting}
+                
+                \paragraph{} Set 
+                
+                
+                
+                
+
+                
 \end{document}
