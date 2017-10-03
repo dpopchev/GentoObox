@@ -1,0 +1,59 @@
+#
+# Default logrotate(8) configuration file for Gentoo Linux.
+# See "man logrotate" for details.
+
+# rotate log files weekly.
+weekly
+#daily
+
+# keep 4 weeks worth of backlogs.
+rotate 2
+
+# create new (empty) log files after rotating old ones.
+create
+
+# use date as a suffix of the rotated file.
+dateext
+
+# compress rotated log files.
+compress
+
+#notifempty
+# I want to rotate them all, manual says this is default, but I put it anyway
+ifempty
+
+# Dont send any mails
+nomail
+
+# Logs are rotated in the directory they normally reside
+noolddir
+
+# If the log files is missing, go on the next one without issuing an error message, I want that
+missingok
+
+# packages can drop log rotation information into this directory.
+include /etc/logrotate.d
+
+# no packages own wtmp and btmp -- we'll rotate them here.
+/var/log/wtmp {
+    monthly
+    create 0664 root utmp
+    minsize 1M
+    rotate 1
+}
+/var/log/btmp {
+    missingok
+    monthly
+    create 0600 root utmp
+    rotate 1
+}
+
+# system-specific logs may be also be configured here.
+/var/log/emerge-fetch.log {
+}
+/var/log/emerge.log {
+}
+/var/log/genkernel.log {
+}
+/var/log/tallylog {
+}
