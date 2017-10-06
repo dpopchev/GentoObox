@@ -554,10 +554,12 @@ root# export PS1="CH${PS1}"
                 
                 \paragraph{} Important note: I will not use modules since \href{https://wiki.gentoo.org/wiki/Kernel/Gentoo_Kernel_Configuration_Guide#Modules_do_not_get_loaded_automatically}{they make life harder.}
                 
+                \paragraph{} For my case important source of info was \href{https://wiki.gentoo.org/wiki/Lenovo_ThinkPad_T440s}{this gentoo guide}
+                
                 \paragraph{} Manual configuration is much easier with \textit{lspci} which is included into \textit{pciutils}. This command will identify PCI-based and AGP-based hardware and help us to find the driver into the kernel.
                 
 \begin{lstlisting}[style=BashInputCHRoot]
- CHroot# emerge -va sys-apps/pciutils
+ CHroot# emerge -va sys-apps/pciutils sys-apps/usbutils
 \end{lstlisting}
                 
                 \paragraph{} Our first step is to see our hardware and drivers in use. Remember that I presume we are installing Gentoo using an live medium, thus I presume that most or even all the hardware is working. This means that the live usb has successfully recognized and loaded the modules we need to compile. To see which modules are in use and for which device we simply
@@ -620,6 +622,17 @@ root# export PS1="CH${PS1}"
  Subsystem: Intel Corporation Wireless-N 7260
  Kernel driver in use: iwlwifi
  Kernel modules: iwlwifi
+ root# lsusb
+ Bus 002 Device 002: ID 8087:8000 Intel Corp. 
+ Bus 002 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+ Bus 001 Device 002: ID 8087:8008 Intel Corp. 
+ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+ Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+ Bus 003 Device 003: ID 8087:07dc Intel Corp. 
+ Bus 003 Device 002: ID 17ef:604d Lenovo 
+ Bus 003 Device 005: ID 0bda:5719 Realtek Semiconductor Corp. 
+ Bus 003 Device 004: ID 138a:0011 Validity Sensors, Inc. VFS5011 Fingerprint Reader
+ Bus 003 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
                 \end{lstlisting}
                 
                 \paragraph{} So lets make a list
@@ -633,6 +646,7 @@ root# export PS1="CH${PS1}"
                     \item smbus: \textbf{i2c\_i801}
                     \item ethernet controller: \textbf{r8169}
                     \item network controller (wifi): \textbf{iwlwifi}
+                    \item pcie card reader: \textbf{rtsx\_pci} \href{https://wiki.gentoo.org/wiki/Lenovo_ThinkPad_T440s#Hardware_Status}{some info here}
                 \end{enumerate}
                 
                 \paragraph{} Now lets go to the kernel menu
@@ -834,8 +848,8 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
                     \end{lstlisting}
                     
                     \newpage
-                    \item \textbf{iwlwifi} for the wifi controller and  \href{https://wiki.gentoo.org/wiki/Iwlwifi#Kernel}{follow this article} and \href{https://wiki.gentoo.org/wiki/Wifi#Kernel}{this} also according to \href{https://forums.gentoo.org/viewtopic-p-7640140.html#7640140}{this recommendation} I will set the drivers as modules.
-                    
+                    \item \textbf{iwlwifi} for the wifi controller and  \href{https://wiki.gentoo.org/wiki/Iwlwifi#Kernel}{follow this article} and \href{https://wiki.gentoo.org/wiki/Wifi#Kernel}{this} also according to make sure to \href{https://wiki.gentoo.org/wiki/Iwlwifi#When_using_built-in_configuration}{built it in like this} (check if /lib64/firmware has the wanted firmware, since it is not at /usr/src/linux/firmware ). In my case it was recommended to use \href{https://wiki.gentoo.org/wiki/Lenovo_ThinkPad_T440s#Required_packages}{iwlwifi-7260-16.ucod}, but according to \href{https://wireless.wiki.kernel.org/en/users/drivers/iwlwifi#firmware}{this table} the \textbf{16} should become \textbf{17}... Why? I don't know; How I got it to work? - I tried 
+                    \textit{modinfo iwlwifi} and a little luck.
                     \begin{lstlisting}[style=KernelConfig]
  ...
  Networking support
@@ -851,55 +865,196 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
      Network device support
          Wireless LAN
              [*] Intel devices
-                 <M>     Intel Wireless WiFi Next Gen AGN - Wireless-N/Advanced-N/Ultimate-N (iwlwifi)  
-                 <M>      Intel Wireless WiFi DVM Firmware support
-                 <M>      Intel Wireless WiFi MVM Firmware support
- ...
-                  
+                 <*>     Intel Wireless WiFi Next Gen AGN - Wireless-N/Advanced-N/Ultimate-N (iwlwifi)  
+                 <*>      Intel Wireless WiFi DVM Firmware support
+                 <*>      Intel Wireless WiFi MVM Firmware support
+    Generic Driver Options
+        -*- Userspaces firmware loading support
+        [ ] Include in kernel firmware blobs in kernel binary
+        (iwlwifi-7260-17.ucode) external firmware blobs to build into kernel binary
+        (/lib64/firmware) firmware blobs root directory
                     \end{lstlisting}
-                    
+
+                \newpage
+                \item pci card reader is ran by rtsx\_pci, more configs later on
+                
+                \begin{lstlisting}[style=KernelConfig]
+ Device drivers
+     Multifunction device drivers
+         <*> Realtek PCI-E card reader
+                \end{lstlisting}
+                
                 \end{enumerate}
                 
                 \newpage
                 \paragraph{} Now lets check if the minimum required options are set \href{https://wiki.gentoo.org/wiki/Handbook:AMD64/Installation/Kernel#Activating_required_options}{following this guide}
                 
-                \paragraph{} Enable filesystems
-                
-                \begin{lstlisting}[style=KernelConfig]
+                \begin{enumerate}
+                    
+                    \item Enable filesystems
+                        \begin{lstlisting}[style=KernelConfig]
  File systems
-     <*> second extended fs support
-     <*> ext3 fs support
-     <*> ext4 fs support
-     DOS/FAT/NT fylesystems
-         <*> MSDOS fs support
-         <*> VFAT fs support
-         [*] Enable utf-8 option by default
-         <*> NTFS file system support
-         [*] 	debugging
-         []		writing
-                \end{lstlisting}
-                
-                \newpage 
-                \paragraph{} Enable ppp
-                
-                \begin{lstlisting}[style=KernelConfig]
+    <*> second extended fs support
+    <*> ext3 fs support
+    <*> ext4 fs support
+ ...
+    DOS/FAT/NT fylesystems
+        <*> MSDOS fs support
+        <*> VFAT fs support
+        [*] Enable utf-8 option by default
+        <*> NTFS file system support
+            [*] 	debugging
+            [*]		writing
+                        \end{lstlisting}
+                        
+                    \newpage
+                    \item Enable ppp
+                    
+                        \begin{lstlisting}[style=KernelConfig]
  Device drivers
-     Network device support
-         <*> PPP support
-             <*> PPP for async
-             <*> PPP for tty 
-                \end{lstlisting}
-                
-                \newpage
-                \paragraph{} Little twiks on the processor following \href{https://wiki.gentoo.org/wiki/Kernel/Gentoo_Kernel_Configuration_Guide#Multiprocessor.2C_Hyper-Threading_and_multi-core_systems}{this guide} and those \href{https://forums.gentoo.org/viewtopic-t-939150-start-0.html}{notes}
-                
-                \begin{lstlisting}[style=KernelConfig]
+    Network device support
+        <*> PPP support
+        <*> PPP for async
+        <*> PPP for tty
+                         \end{lstlisting}
+                         
+                     
+                     \newpage
+                     \item Little twiks on the processor following \href{https://wiki.gentoo.org/wiki/Kernel/Gentoo_Kernel_Configuration_Guide#Multiprocessor.2C_Hyper-Threading_and_multi-core_systems}{this guide} and those \href{https://forums.gentoo.org/viewtopic-t-939150-start-0.html}{notes}
+                     
+                        \begin{lstlisting}[style=KernelConfig]
  Processor type and features
-     [*] Symmetric multi processing support
-     [*] SMT (Hyperthreading) scheduler support
-     [*] Multi-core scheduler support
-     Processor family (Core 2/newer Xeon)
-                \end{lstlisting}
+    [*] Symmetric multi processing support
+    [*] SMT (Hyperthreading) scheduler support
+    [*] Multi-core scheduler support
+    Processor family (Core 2/newer Xeon)
+                        \end{lstlisting}                  
+                    
+                    \newpage
+                    \item \href{https://wiki.gentoo.org/wiki/Kernel/IKCONFIG_Support}{access the kernel config from /proc/config.gz}
+                        
+                        \begin{lstlisting}[style=KernelConfig]
+ General Setup 
+     <*> Kernel .config support
+         [*] Enable access to .config through /proc/config.gz
+                        \end{lstlisting}
+                    
+                    \newpage
+                    \item \href{https://wiki.gentoo.org/wiki/Udev#Kernel}{udev}
+                        
+                        \begin{lstlisting}[style=KernelConfig]
+ ...
+ General setup
+     [*] Configure standard kernel features (expert users)
+         [ ] Enable deprecated sysfs features to support old userspace tools
+         [*] Enable signalfd() system call
+ ...
+ Enable the block layer
+     [*] Block layer SG support v4
+ ...
+ Networking support
+     Networking options
+          <*> Unix domain sockets
+ ...
+ Device Drivers
+     Generic Driver Options
+         ()  path to uevent helper
+         [*] Maintain a devtmpfs filesystem to mount at /dev
+     < > ATA/ATAPI/MFM/RLL support (DEPRECATED)
+ ...
+ File systems
+     [*] Inotify support for userspace
+     Pseudo filesystems
+         [*] /proc file system support
+         [*] sysfs file system support
+                        \end{lstlisting}
+                    
+                    \newpage
+                    \item \href{https://wiki.gentoo.org/wiki/ConsoleKit#Kernel}{consolekit}
+                        \begin{lstlisting}[style=KernelConfig]
+ General setup
+     [*] Auditing support
+     [*] Enable system-call auditing support
+                        \end{lstlisting}
+                        
+                    \newpage
+                    \item \href{https://wiki.gentoo.org/wiki/Bluetooth#Kernel}{bluetooth}
+                    
+                    \begin{lstlisting}[style=KernelConfig]
+ [*] Networking support
+     <*>   Bluetooth subsystem support
+         [*]   Bluetooth Classic (BR/EDR) features
+         <*>     RFCOMM protocol support
+         [ ]       RFCOMM TTY support
+         < >     BNEP protocol support
+         [ ]       Multicast filter support
+         [ ]       Protocol filter support
+         <*>     HIDP protocol support
+         [*]     Bluetooth High Speed (HS) features
+         [*]   Bluetooth Low Energy (LE) features
+             Bluetooth device drivers
+                 <*> HCI USB driver
+                 <*> HCI UART driver
+     <*>   RF switch subsystem support
+ Device Drivers
+     HID support
+         <*>   User-space I/O driver support for HID subsystem
+                    \end{lstlisting}
+                    
+                    \newpage
+                    \item built in camera
+                    \begin{lstlisting}[style=KernelConfig]
+ Device drivers                    
+     <*> Multimedia support
+         [*] Media USB adapters
+             <*> USB Video Class
+                    \end{lstlisting}
+                    
+                    \newpage
+                    \item \href{https://wiki.gentoo.org/wiki/ACPI#Kernel}{acpi}, \href{https://wiki.gentoo.org/wiki/Suspend_and_hibernate}{suspend}, \href{https://wiki.gentoo.org/wiki/ACPI/ThinkPad-special-buttons#Preparation}{thinkpad special buttons}
+
+                        \begin{lstlisting}[style=KernelConfig]
+ Power management and ACPI options
+     ACPI
+         [*] Allow supported ACPI revision to be overriden
+         <*> AC adapter
+         <*> Battery
+         <*> Thermal zone
+     [*] Suspend to RAM and standby
+     [*] CPU Freq scaling
+         Default CPUfreq governor (ondemand)
+         -*- 'performance
+         <*> 'powersave'
+         <*> 'userspace'
+         -*- 'ondemand'
+         <*> 'conservative' cpufreq governor
+         -*- intel p state control
+         -*- ACPI processor p-states driver
+ Device drivers
+     X86 Platform Specific Device Drivers
+         <*> Thinkpad ACPI Laptop Extras
+             [*] Console audio control ALSA interfface
+             [*] Support NVRAM polling for hot keys
+                        \end{lstlisting}
+                    
+                    \newpage
+                    \item \href{https://wiki.gentoo.org/wiki/Udisks#Kernel}{udisks} for mounting, partitions and etc
+                    
+                        \begin{lstlisting}[style=KernelConfig]
+ General setup
+     [*] Support for paging of anonymous memory (swap)
+ Device Drivers
+     < > ATA/ATAPI/MFM/RLL support (DEPRECATED)
+ File Systems
+     Native Language Support 
+         ... choose whatever you want...
+     Pseudo filesystems
+         -*- Tmpfs virtual memory file system support (former shm fs)
+         [*]   Tmpfs POSIX Access Control Lists
+     
+                        \end{lstlisting}
+                    
+                \end{enumerate}
                 
                 \newpage
                 \paragraph{} After all the work lets compile. 
@@ -907,29 +1062,459 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
                 \begin{lstlisting}[style=BashInputCHRoot]
  CHroot# make -j4 && make modules_install && make install
                 \end{lstlisting}
-             
+            
+            \newpage
+            \subsection{Bootloader}
+            
+                \subsubsection{MBR with BIOS}
+                    
+                    \paragraph{} With the Linux kernel configured we should make sure that something will boot it - the bootloader. If we have multiple OSs or kernels, to make sure the bootloader will recognize it we need \textit{os-prober}. \href{https://wiki.gentoo.org/wiki/GRUB2}{Notes to follow here}
+
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av sys-boot/grub:2 sys-boot/os-prober
+                    \end{lstlisting}
+                    
+                    \paragraph{}  \href{https://wiki.gentoo.org/wiki/GRUB2#BIOS_with_MBR}{Lest install the bootloader}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# grub-install /dev/sdb
+                    \end{lstlisting}
+                    
+                    \paragraph{} And now lets let grub to make the configuration of the existing kernels and OSs:
+
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# grub-mkconfig -o /boot/grub/grub.cfg
+                    \end{lstlisting}
+                    
             \newpage
             \subsection{Final touches}
+                
+                \subsubsection{Default editor}
+                
+                    \paragraph{} I like \textit{vim}. \href{https://wiki.gentoo.org/wiki/Vim/Guide}{Little guide to vim} 
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va vim                 
+ CHroot# eselect editor list
+ Available targets for the EDITOR variable:
+ [1]   /bin/nano
+ [2]   /bin/ed
+ [3]   /usr/bin/ex
+ [4]   /usr/bin/vi 
+ [ ]   (free form)
+ CHroot# eselect editor set 4
+                    \end{lstlisting}
+                    
+                \newpage
+                \subsubsection{Bash autocomplete}
+                    \paragraph{} Very nice feature oh the shell  \href{https://wiki.gentoo.org/wiki/Bash#Tab_completion}{is the autocompletion.}
 
-                \paragraph{} Host information
-                \begin{lstlisting}[style=BashInputCHRoot]
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av app-shells/bash-completion
+                    \end{lstlisting}
+                
+                \newpage
+                \subsubsection{Host name}
+                    \paragraph{} Host information
+                    \begin{lstlisting}[style=BashInputCHRoot]
  CHroot# nano -w /etc/conf.d/hostname
  # Set the hostname variable to the selected host name
  hostname="kaktus"
-                \end{lstlisting}
-                
-                \paragraph{} Domain information, in my case no domain should be configured, so to get rid of "This is hostname.(none)" messages at their login screen. This should then be fixed by editing /etc/issue and deleting the string .\O from that file.
-                \begin{lstlisting}[style=BashInputCHRoot]
- CHroot# nano -w /etc/issue
- # to look like this
- This is \n (\s \m \r) \t
-                \end{lstlisting}
-                
-                \paragraph{} Set 
-                
-                
-                
-                
+                    \end{lstlisting}
+                    
+                    \paragraph{} Domain information, in my case no domain should be configured, so to get rid of "This is hostname.(none)" messages at their login screen. This should then be fixed by editing /etc/issue and deleting the string ."\textbackslash O" from that file.
 
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# nano -w /etc/issue
+ # to look like this, without the 
+ This is \n (\s \m \r) \t
+                    \end{lstlisting}
                 
+                \newpage
+                \subsubsection{Setting root password}
+                    
+                    \paragraph{} Setting root password
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# passwd
+                    \end{lstlisting}
+                    
+                \newpage
+                \subsubsection{Creating user, setting groups, making him be able to sudo}
+                    
+                    \paragraph{} Lets install \textit{app-admin/sudo},  \href{https://wiki.gentoo.org/wiki/Sudo}{more info here}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va app-admin/sudo
+                    \end{lstlisting}
+                    
+                    \paragraph{} I prefer all users in \textit{wheel} group to execute without password all commands. To achieve this I edit the sudoers file like this:
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# sudoedit /etc/sudoers
+                    \end{lstlisting}
+                    
+\lstinputlisting[linerange={76-86}, firstnumber=76, language=LinuxConfigFiles]{sample_configs/sudoers_example}
+                    
+                    \paragraph{} Adding user with home directory, bash shell and belonging groups: 
+                    
+                    \begin{itemize}
+                        \item \textbf{wheel} so to use sudo, for this in a moment
+                        \item \textbf{floppy} to use the floppy
+                        \item \textbf{audio} to access the audio devices
+                        \item \textbf{cdrom} to access the opticaldevices
+                        \item \textbf{video} to access the video capturing hardware and doing hardware acceleration
+                        \item \textbf{cdrw} to be able to use writing capabilities of optical devices
+                        \item \textbf{usb} be able to access USB devices
+                        \item \textbf{users} general users group
+                        \item \textbf{portage} be able to run portage as normal user
+                        \item \textbf{plugdev} be able to use udisks, more later
+                        \item \textbf{dimitar} be member of its own group
+                    \end{itemize}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# useradd \
+     -m \
+     -G wheel,floppy,audio,cdrom,video,cdrw,usb,users,plugdev,portage,dimitar \
+     -s /bin/bash \
+     dimitar
+                    \end{lstlisting}
+                    
+                    \paragraph{} And set password
+
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# passwd dimitar
+                    \end{lstlisting}
+                
+                \newpage
+                \subsubsection{Logging, cron jobs, rotation tools}
+                    
+                    \paragraph{} We need a tool to take care of our logging. My choice is \textit{sysklogd}.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av app-admin/sysklogd
+ CHroot# rc-update add sysklogd default
+                    \end{lstlisting}
+                    
+                    \paragraph{} But we will need to rotate those logs, so we need \textit{logrotate}. Some help \href{https://wiki.gentoo.org/wiki/Logrotate}{from the Gentoo Wiki} and \href{https://wiki.archlinux.org/index.php/logrotate}{from Arch Wiki} and \href{https://linuxconfig.org/logrotate-8-manual-page}{the manual}.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av logrotate
+                    \end{lstlisting}
+                    
+                    \paragraph{} Now we need to configure the tool. My sample looks like:
+                    
+\lstinputlisting[language=LinuxConfigFiles]{sample_configs/logrotate.conf_example}
+                    
+                    \paragraph{} Important notes: the files at the end are added by me, since they were missing in the original config and the extra configs at \textit{/etc/logrotate.d}. You can see what the command will do by executing:
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# logrotate -f -d /etc/logrotate.con
+                    \end{lstlisting}
+                    
+                    \paragraph{} \textit{logrotate} should be run at regular intervals, for this we need \textit{cron}. It comes in many forms, but the one I use is \href{https://wiki.gentoo.org/wiki/Cron#fcron}{fcron} since it is designed to work on systems that are not continuously running.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av fcron
+ CHroot# rc-update add fcron default
+                    \end{lstlisting}
+                    
+                    \paragraph{} Lets see if we have logrotate as cronjob in any /etc/cron.{hourly,daily,weekly,monthly} directories. 
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# grep -r logrotate /etc/cron*
+ ...
+ /etc/cron.daily/logrotate:/usr/bin/logrotate /etc/logrotate.conf
+ ...
+                    \end{lstlisting}
+                    
+                    \paragraph{} This means that at \textbf{/etc/cron.daily/}(means it will be started once a day) there is a script named \textbf{logrotate}, which contains the execution of the logrotate command with config file \textbf{/etc/logrotate.conf}. The full script looks like this:
+                    
+\lstinputlisting[language=LinuxConfigFiles]{sample_configs/logrotate_example}
+                
+                \newpage
+                \subsubsection{Gentoolkit}
+                    
+                    \paragraph{} Recommend gentoo tools are hidden in \href{https://wiki.gentoo.org/wiki/Gentoolkit}{\textit{gentoolkit}}
+
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va getoolkit
+                    \end{lstlisting}
+                    
+                \newpage
+                \subsubsection{ALSA}
+                
+                    \paragraph{} We have already configured the \textit{kernel} and \textit{make.conf}. Make sure that \textbf{alsa} use flag is set.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep alsa
+ USE="...alsa..."
+                    \end{lstlisting}
+                    
+                    \paragraph{} We also need \href{https://wiki.gentoo.org/wiki/ALSA#Software}{additional software}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va alsa-utils
+                    \end{lstlisting}
+                    
+                    \paragraph{} And make sure the service is going to start
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# rc-update add alsasound boot
+                    \end{lstlisting}
+                    
+                \newpage
+                \subsubsection{Pulseaudio}
+                
+                    \paragraph{} We should have already configured the \textit{kernel} and \textit{make.conf}. Lets make sure \textbf{pulseaudio} use flag is set
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep pulseaudio
+ USE="...pulseaudio..."
+                    \end{lstlisting}
+                    
+                    \paragraph{} To control the server we can use GUI - either the GTK \textit{pavucontrol} or PulseAudio Preferences \textit{paprefs} or integrated KDE's Phonon. I prefer \textit{pavucontrol}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va pavucontrol alsa-plugins             
+                    \end{lstlisting}
+                    
+                    \paragraph{} Make sure your users are included to \textbf{audio} group
+                    
+                \newpage
+                \subsubsection{udev}
+                
+                    \paragraph{} \textbf{udev} is the device manager for the linux kernel. The kernel should be already configured. Check for use flag
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep udev
+ USE="...udev..."
+                    \end{lstlisting}
+                    
+                    \paragraph{} Make sure to start it.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# rc-update add udev sysinit
+                    \end{lstlisting}
+                    
+                \newpage
+                \subsubsection{consolekit}
+                
+                    \paragraph{} \textbf{consolekit} is a framework for defining and tracking users. Make sure the use flag is set, as the kernel configs should be already done.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep consolekit
+ USE="...consolekit..."
+                    \end{lstlisting}
+                    
+                    \paragraph{} Make sure the service is going to be started with 
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# rc-update add consolekit default
+                    \end{lstlisting}
+                    
+                \newpage
+                \subsubsection{policykit}
+                
+                    \paragraph{} \textbf{polkit} is an authorization API indented to be used by privileged programs offering services to unprivileged programs. Lets check fo the use flag
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep policykit
+ USE="...policykit..."
+                    \end{lstlisting}
+                
+                \newpage
+                \subsubsection{dbus}
+                    
+                    \paragraph{} \textbf{dbus} is an interprocess communication system for software application. Lets check the use flag
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep dbus
+ USE="...dbus..."
+                    \end{lstlisting}
+                    
+                    \paragraph{} Lets make sure it is started
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# rc-update add dbus default
+                    \end{lstlisting}
+                    
+                \newpage
+                \subsubsection{Networkmanager}
+
+                    \paragraph{} Last but not least - the network manager. We have already configured the kernel. Lets make sure the use flag is set
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep networkmanager
+                    \end{lstlisting}
+                    
+                    \paragraph{} We will need an implementation to use it, I prefer the GTK one
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av nm-applet
+                    \end{lstlisting}
+                    
+                    \paragraph{} Lets make sure it will start an startup
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# rc-update add NetworkManager default
+                    \end{lstlisting}
+                    
+                    \paragraph{} Make sure your users are included into \textbf{plugdev} group.
+                    
+                \newpage
+                \subsubsection{pci card reader}
+                    
+                    \paragraph{} Should already have appropriate kernel config. In my case I need also
+                     
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va pcsc-tools
+                    \end{lstlisting}
+                    
+                \newpage
+                \subsubsection{finger reader}
+                    
+                    \paragraph{} It may work or not with \textit{fprintd} \href{https://wiki.gentoo.org/wiki/Fingerprint_Reader}{\textit{fprintd}}, but I am leaving it open for now. Last time I tried it did not work.
+                
+                
+                \newpage
+                \subsubsection{Acpi, laptop\_mode, suspend}
+                
+                    \paragraph{} Lets see if \textit{acpi} use flag is set
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep acpi
+ USE="...acpi..."
+                    \end{lstlisting}
+                    
+                    \paragraph{} We need the \textit{acpid} package and it should be started at default level, \href{https://wiki.gentoo.org/wiki/ACPI#Emerge}{guide}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av acpid acpitool
+ CHroot# rc-update acpid default                    
+                    \end{lstlisting}
+                    
+                    \paragraph{} Lets install laptop mode, \href{https://wiki.gentoo.org/wiki/Power\_management/Guide#Installation}{guide}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va laptop-mode-tools
+ CHroot# rc-update laptop_mode default                    
+                    \end{lstlisting}
+                    
+                    \paragraph{} For suspending this program should be sufficient, \href{https://wiki.gentoo.org/wiki/Suspend\_and\_hibernate#Software}{guide}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va suspend
+                    \end{lstlisting}
+                
+                \newpage
+                \subsubsection{udiskies}
+                    
+                    \paragraph{} Hadnling the mounting and etc. make sure to have
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep udisks
+ USE="...udisks..."
+                    \end{lstlisting}
+                    
+                    \paragraph{} \href{https://wiki.gentoo.org/wiki/Udisks#Emerge}{Additional software} is found at
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av udiskie
+                    \end{lstlisting}
+                    
+                    \paragraph{} Don't forget to include your users to \textbf{plgudev} group!!!
+                
+                \newpage
+                \subsubsection{Display manager}
+                    
+                    \paragraph{} I prefer to be greeted with something different of an console, thus the need of display manager. My choice is \textit{lightdm} 
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -va lightdm
+                    \end{lstlisting}
+                    
+                    \paragraph{} To start LightDM we need \textit{dbus} and \textit{xdm} at default level, but presume \textit{dbus} is already there.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# rc-update add xdm default
+                    \end{lstlisting}
+                    
+                    \paragraph{} We need to set LightDM as the default display manager in \textit{/etc/conf.d/xdm}
+                    
+                    \lstinputlisting[linerange={8-11}, firstnumber=8,language=LinuxConfigFiles]{sample_configs/xdm_example}
+                
+                \newpage
+                \subsubsection{Programs}
+
+                    \paragraph{} Here is the list of programs I like to use
+                    \begin{itemize}
+                        \item xorg - \textbf{xorg-server}
+                        \item Desktop environment - \textbf{openbox}
+                        \item polkit - \textbf{lxqt-policykit}
+                        \item qt based configuration tool for Openbox - \textbf{obconf-qt}
+                        \item gtk theme configs with additional plugin for obconf, but not all openbox configs are included - \textbf{lxappearance-obconf}
+                        \item additional nice features for config - \textbf{lxqt-config}
+                        \item for monitor configuration I prefer - \textbf{arandr}
+                        \item menu generator - \textbf{obmenu-generator}
+                        \item Clipboard manager - \textbf{parcellite}
+                        \item Filemanager - \textbf{spacefm} or \textbf{pcmanfm}
+                        \item terminal - \textbf{xterm} for backup and \textbf{qterminal} regularly
+                        \item browser - \textbf{firefox} 
+                        \item mail client - \textbf{thunderbird} or some addon for firefox
+                        \item torrent client - \textbf{transmission}
+                        \item video/music player - \textbf{smplayer}
+                        \item image viewer - \textbf{nomacs}
+                        \item document reader - \textbf{qpdfview} and \textbf{okular}, since last time I checked the first did not save the page position on exit
+                        \item e-book management for my kindle - \textbf{calibre}
+                        \item editor - \textbf{gvim} but in most cases \textbf{mousepad} is enough
+                        \item office suits - \textbf{libreoffice}
+                        \item ide - \textbf{geany} and \textbf{texstudio}
+                        \item I like \LaTeX - \textbf{texlive}, with useflags \textit{extra graphics humanities png science}
+                        \item I like python - \textbf{ipython} with useflags \textit{matplotlib examples latex}, also, maybe if needed use \textbf{pip} but \href{https://wiki.gentoo.org/wiki/Pip#Invocation}{BUT ONLY AS USER} OR maybe just \textbf{jupyter}
+                        \item network manager - \textbf{nm-applet}, it will pull out NetworkManager
+                        \item system monitoring - \textbf{qps}
+                        \item quick program starter - \textbf{gmrun} or \textbf{lxqt-runner}
+                        \item program for archives - \textbf{xarchiver}, after its emerge is completed it will suggest additional programs as \textbf{rar}, \textbf{unrar}, \textbf{zip}, \textbf{unzip} and etc.
+                        \item system tray - \textbf{stalonetray}
+                        \item screensaver - \textbf{xscreensaver}
+                        \item git - \textbf{git}
+                        \item flash player - \textbf{adobe-flash}
+                        \item password manager - \textbf{app-admin/keepass}
+                    \end{itemize}
+                
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -uDNva xorg-server openbox obconf-qt lxappearance-obconf lxqt-config arandr obmenu-generator parcellite spacefm xterm qterminal firefox thunderbird transmission smplayer nomacs qpdfview okular calibre gvim mousepad libreoffice texstudio texlive jupyter nm-applet qps gmrun lxqt-runner xarchiver stalonetray xscreensaver git app-admin/keepass
+                    \end{lstlisting}
+                
+                    \paragraph{} Here is the software installed in the previous subsubsections
+                    \begin{itemize}
+                        \item default editor - \textbf{vim}
+                        \item bash autocomplete - \textbf{bash-completion}
+                        \item sudo - \textbf{sudo}
+                        \item logger - \textbf{sysklogd logrotate fcron}
+                        \item gentoo tool kit - \textbf{gentoolkit}
+                        \item alsa - \textbf{alsa-utils}
+                        \item pulseaudio - \textbf{pavucontrol}
+                        \item network manager applet - \textbf{nm-applet}
+                        \item pci card reader - \textbf{pcsc-tools}
+                        \item acpi - \textbf{acpid acpitool laptop-mode-tools suspend}
+                        \item udisks - \textbf{udiskie}
+                        \item display manager - \textbf{lightdm}
+                    \end{itemize} 
+                    
+                    \paragraph{} Last but not least check if services are added to apporpiate levels with \textbf{rc-update | grep {name\_of\_service}}
+
+                    \begin{itemize}
+                        \item \textbf{alsasound} should be at \textbf{boot}
+                        \item \textbf{NetworkManager} should be at \textbf{default}
+                        \item \textbf{acpid} should be at \textbf{default}
+                        \item \textbf{consolekit} should be at \textbf{default}
+                        \item \textbf{dbus} should be at \textbf{default}
+                        \item \textbf{fcron} should be at \textbf{default}
+                        \item \textbf{laptop\_mode} should be at \textbf{default}
+                        \item \textbf{sysklogd} should be at \textbf{default}
+                        \item \textbf{xdm} should be at \textbf{default}
+                        \item \textbf{udev} should be at \textbf{sysinit}
+                    \end{itemize}
+                    
 \end{document}
