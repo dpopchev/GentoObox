@@ -1432,6 +1432,35 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
                     \end{lstlisting}
 
                     \paragraph{} Don't forget to include your users to \textbf{plgudev} group!!!
+                
+                \newpage
+                \subsubsection{OPENntpd}
+                    
+                    \paragraph{} We want to have automatic syncing of the time!!! Some hints in \href{https://wiki.gentoo.org/wiki/OpenNTPD}{Gentoo wiki} and \href{https://wiki.archlinux.org/index.php/OpenNTPD}{Arch wiki} and \href{https://forums.gentoo.org/viewtopic-p-8003072.html?sid=9f71ccb3c1b6c9b2afb28070af45549c}{this particular forum entry}
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av openntpd
+                    \end{lstlisting}
+                    
+                    \paragraph{} Lets edit the config file by adding some 
+                    
+                    \lstinputlisting[linerange={23-32}, firstnumber=23, language=LinuxConfigFiles]{sample_configs/ntpd.conf_example}
+                    
+                    \paragraph{} Lets not forget to add it at default boot level:
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# rc-update add ntpd default
+                    \end{lstlisting}
+                    
+                    \paragraph{} To check if everything is working:
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# # Lets see if config file is OK
+ CHroot# ntpd -n
+ configuration OK
+ CHroot# # ntpd -s -d To see about offsets and etc
+ CHroot# # ntpctl -s status To watch when the clock will be synced, while the previus command is running
+                    \end{lstlisting}
 
                 \newpage
                 \subsubsection{Display manager}
@@ -1466,7 +1495,7 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
                         \item for monitor configuration I prefer - \textbf{arandr}
                         \item menu generator - \textbf{obmenu-generator}
                         \item Clipboard manager - \textbf{parcellite}
-                        \item Filemanager - \textbf{spacefm} or \textbf{pcmanfm}
+                        \item Filemanager - \textbf{spacefm} or \textbf{pcmanfm}, but actually prefer the later
                         \item terminal - \textbf{xterm} for backup and \textbf{qterminal} regularly
                         \item browser - \textbf{firefox}
                         \item mail client - \textbf{thunderbird} or some addon for firefox
@@ -1482,17 +1511,19 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
                         \item I like python - \textbf{ipython} with useflags \textit{matplotlib examples latex}, also, maybe if needed use \textbf{pip} but \href{https://wiki.gentoo.org/wiki/Pip#Invocation}{BUT ONLY AS USER} OR maybe just \textbf{jupyter}
                         \item network manager - \textbf{nm-applet}, it will pull out NetworkManager
                         \item system monitoring - \textbf{qps}
-                        \item quick program starter - \textbf{gmrun} or \textbf{lxqt-runner}
+                        \item quick program starter - \textbf{gmrun} or \textbf{lxqt-runner}, all programs started with gmrun are called gmrun, but I like it better
                         \item program for archives - \textbf{xarchiver}, after its emerge is completed it will suggest additional programs as \textbf{rar}, \textbf{unrar}, \textbf{zip}, \textbf{unzip} and etc.
                         \item system tray - \textbf{stalonetray}
                         \item screensaver - \textbf{xscreensaver}
                         \item git - \textbf{git}
                         \item flash player - \textbf{adobe-flash}
                         \item password manager - \textbf{app-admin/keepass}
+                        \item composition manager - \textbf{compton}
+                        \item easy app finder - \textbf{xfce4-appfinder}
                     \end{itemize}
 
                     \begin{lstlisting}[style=BashInputCHRoot]
- CHroot# emerge -uDNva xorg-server openbox obconf-qt lxappearance-obconf lxqt-config arandr obmenu-generator parcellite spacefm xterm qterminal firefox thunderbird transmission smplayer nomacs qpdfview okular calibre gvim mousepad libreoffice texstudio texlive jupyter nm-applet qps gmrun lxqt-runner xarchiver stalonetray xscreensaver git app-admin/keepass
+ CHroot# emerge -uDNva xorg-server openbox obconf-qt lxappearance-obconf lxqt-config arandr obmenu-generator parcellite spacefm xterm qterminal firefox thunderbird transmission smplayer nomacs qpdfview okular calibre gvim mousepad libreoffice texstudio texlive jupyter nm-applet qps gmrun xarchiver stalonetray xscreensaver git app-admin/keepass compton xfce4-appfinder
                     \end{lstlisting}
 
                     \paragraph{} Here is the software installed in the previous subsubsections
@@ -1523,7 +1554,48 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
                         \item \textbf{laptop\_mode} should be at \textbf{default}
                         \item \textbf{sysklogd} should be at \textbf{default}
                         \item \textbf{xdm} should be at \textbf{default}
+                        \item \textbf{ntpd} should be at \textbf{default}
                         \item \textbf{udev} should be at \textbf{sysinit}
                     \end{itemize}
+                
+                \newpage
+                \subsubsection{LXQT}
+                
+                    \paragraph{} For the moment, to achieve uniform look of qt and gtk applications I use \href{https://wiki.gentoo.org/wiki/LXQt}{LXQT environment}. \href{https://wiki.archlinux.org/index.php/GTK\%2B#GTK.2B_and_Qt}{Some hints on qt gtk uniform look.} Despite my efforts to search for which variables are needed and etc. I did not manage to achieve qt5 applications to use the gtk themes from lxappearance. Thus for the moment I give up.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge -av lxqt-base/lxqt-meta
+                    \end{lstlisting}
+                    
+                    \paragraph{} Now lets make sure we will have \textbf{gtk} option in \textit{qtconfig} with including \textbf{gtkstyle} in make.conf. Lets edit the \textbf{GUI} var in \textit{/etc/portage/make.conf} and include only it and check
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# emerge --info | grep gtkstyle
+ USE="...gtkstyle..."
+                    \end{lstlisting}
+                    
+                    \paragraph{} For \textbf{qt5} uniform look at the moment we need \textit{qtstyleplugins} which is in an \href{https://wiki.gentoo.org/wiki/Layman}{overlay}. They recommend for newer versions to include use flags \textbf{sync-plugin-portage git}.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# USE="sync-plugin-portage git" emerge layman
+ CHroot# # Check if /etc/layman/layman.cfg has "conf_type : repos.conf"
+ CHroot# cat /etc/layman/layman.cfg | grep "conf_type : repos.conf"
+ conf_type : repos.conf
+ CHroot# mkdir -p /etc/portage/repos.conf
+ CHroot# layman-updater -R
+                    \end{lstlisting}
+                    
+                    \paragraph{} Now the desired \textbf{x11-themes/qtstyleplugins} is at \textit{abendbrot}.
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# layman -a abendbrot && layman -S
+ CHroot# emerge -va x11-themes/qtstyleplugins
+                    \end{lstlisting}
+                    
+                    \paragraph{} Finaly, since I prefer dark themes sites look awful. A quick way firefox to not respect it is to compile the package without the \textit{gtk} use flag
+                    
+                    \begin{lstlisting}[style=BashInputCHRoot]
+ CHroot# USE="-gtk2" emerge -va firefox
+                    \end{lstlisting}
 
 \end{document}
