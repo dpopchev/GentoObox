@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+
+<!-- nice resources:
+        https://wiki.ubuntu.com/Fonts
+	http://neugierig.org/software/chromium/fonts/
+	https://forums.gentoo.org/viewtopic-t-1060342.html
+	https://unix.stackexchange.com/questions/232674/how-to-correctly-set-fonts-rendering-in-archlinux-lxde
+	http://www.linuxfromscratch.org/blfs/view/svn/x/tuning-fontconfig.html
+	https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+-->
+
+<!-- find fonts in those directories -->
+  <dir>/usr/share/fonts</dir>
+
+<!-- x should know the sub pixel order already, if not we presume rgb -->
+  <match target="font">
+    <test qual="all" name="rgba" compare="eq"><const>unknown</const></test>
+    <edit name="rgba" mode="assign"> <const>rgb</const> </edit>
+  </match>
+
+<!-- 
+     set dpi 
+     enable anti-aliasing 
+     autohint is old school, all says
+     hinting is what we want
+     lcdfilter is also nice by the default
+     hinting should be slight
+-->
+  <match target="pattern">
+    <edit name="dpi" mode="assign"><double>96</double></edit>
+  </match>
+  <match target="font">
+    <edit name="antialias" mode="assign"><bool>true</bool></edit>
+    <edit mode="assign" name="autohint">  <bool>false</bool></edit>
+    <edit mode="assign" name="hinting">   <bool>true</bool></edit>
+    <edit mode="assign" name="lcdfilter"> <const>lcddefault</const></edit>
+    <edit mode="assign" name="hintstyle"> <const>hintslight</const></edit>
+  </match>
+
+<!--  Accept deprecated 'mono' alias, replacing it with 'monospace' -->
+  <match target="pattern">
+    <test qual="any" name="family"> <string>mono</string> </test>
+    <edit name="family" mode="assign"> <string>monospace</string> </edit>
+  </match>
+
+<!-- Accept alternate 'sans serif' spelling, replacing it with 'sans-serif' -->
+  <match target="pattern">
+    <test qual="any" name="family"> <string>sans serif</string> </test>
+    <edit name="family" mode="assign"> <string>sans-serif</string> </edit>
+  </match>
+
+<!--  Accept deprecated 'sans' alias, replacing it with 'sans-serif' -->
+  <match target="pattern">
+    <test qual="any" name="family"> <string>sans</string> </test>
+    <edit name="family" mode="assign"> <string>sans-serif</string> </edit>
+  </match>
+
+<!-- Names not including any well known alias are given 'sans-serif' -->
+  <match target="pattern">
+    <test qual="all" name="family" compare="not_eq"><string>sans-serif</string></test>
+    <test qual="all" name="family" compare="not_eq"><string>serif</string></test>
+    <test qual="all" name="family" compare="not_eq"><string>monospace</string></test>
+    <edit name="family" mode="append_last"><string>sans-serif</string></edit>
+  </match>
+
+</fontconfig>
