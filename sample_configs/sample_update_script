@@ -1,0 +1,30 @@
+# sources
+#	https://forums.gentoo.org/viewtopic-t-807345.html
+#	https://wiki.gentoo.org/wiki/Gentoo_Cheat_Sheet
+
+# syncing old way
+emerge --sync
+
+# update system
+emerge -uDNva system
+
+# update everything
+emerge -uDNva world
+
+# uninstall useless packages
+emerge -av --depclean
+
+# reverse dynnamic library dependency
+revdep-rebuild -i
+
+# check perl and python and haskell??( I do not have any)
+perl-cleaner --all
+python-updater
+# haskell-updater
+
+# genlop is a Portage log processor which can help estimate build times
+# example usage
+#	view last 10 emerges: genlop -l | tail -n10
+#	view how long emergin libreoffice took: genlop -t libreoffice
+#	estimate time for emerge -uND --with-bdeps=y @world: emerge -pU @world | genlop --pretend
+#	watch latest merging ebuild: watch genlop -unc
