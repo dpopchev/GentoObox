@@ -927,6 +927,9 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
         <*> NTFS file system support
             [*]     debugging
             [*]     writing
+ ...
+ CONFIG_FUSE_FS: yes
+ ...
                         \end{lstlisting}
 
                     \newpage
@@ -1533,10 +1536,11 @@ root# zcat /proc/config.gz | grep CONFIG_DRM_I915
                         \item password manager - \textbf{app-admin/keepass}
                         \item composition manager - \textbf{compton}
                         \item easy app finder - \textbf{xfce4-appfinder}
+                        \item for ntfs writing - \textbf{ntfs3g}
                     \end{itemize}
 
                     \begin{lstlisting}[style=BashInputCHRoot]
- CHroot# emerge -uDNva xorg-server openbox obconf-qt lxappearance-obconf lxqt-config arandr obmenu-generator parcellite spacefm xterm qterminal firefox thunderbird transmission smplayer nomacs qpdfview okular calibre gvim mousepad libreoffice texstudio texlive jupyter nm-applet qps gmrun xarchiver stalonetray xscreensaver git app-admin/keepass compton xfce4-appfinder
+ CHroot# emerge -uDNva xorg-server openbox obconf-qt lxappearance-obconf lxqt-config arandr obmenu-generator parcellite spacefm xterm qterminal firefox thunderbird transmission smplayer nomacs qpdfview okular calibre gvim mousepad libreoffice texstudio texlive jupyter nm-applet qps gmrun xarchiver stalonetray xscreensaver git app-admin/keepass compton xfce4-appfinder ntfs3g
                     \end{lstlisting}
 
                     \paragraph{} Here is the software installed in the previous subsubsections

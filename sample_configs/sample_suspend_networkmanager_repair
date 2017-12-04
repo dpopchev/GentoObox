@@ -1,0 +1,41 @@
+cat /etc/pm/sleep.d/00NetworkManager
+#!/usr/bin/env bash
+
+case $1 in
+	suspend)
+		/etc/init.d/NetworkManager stop
+		;;
+	resume)
+		/etc/init.d/NetworkManager start
+		;;
+	*)
+		;;
+esac
+cat /etc/pm/sleep.d/00leds_power
+#!/usr/bin/env bash
+
+case "$1" in
+	resume)
+		cat /sys/class/leds/tpacpi\:\:power/max_brightness > /sys/class/leds/tpacpi\:\:power/brightness
+		;;
+	*)
+		;;
+esac
+cat /etc/pm/sleep.d/00screensaver-lock
+#!/usr/bin/env bash
+
+xuser=$(who | grep ":0" | awk '{print $1}' | tail -n1)
+
+case "$1" in
+	suspend)
+		su "$xuser" -c 'xscreensaver-command -lock'
+		;;
+	*)
+		;;
+esac
+cat /etc/pm/config.d/gentoo
+HOOK_BLACKLIST="01grub 90clock"
+SUSPEND_MODULES="vboxpci vboxnetflt nboxnetadp vboxdrv iwlwifi iwlmvm cfg80211"
+cat /etc/pm/config.d/laptop-mode-tools
+HOOK_BLACKLIST="00powersave"
+useful site https://wiki.archlinux.org/index.php/pm-utils

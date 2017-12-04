@@ -1,0 +1,170 @@
+eselect fontconfig list
+Available fontconfig .conf files (* is enabled):
+  [1]   09-texlive.conf
+  [2]   10-autohint.conf
+  [3]   10-hinting-full.conf
+  [4]   10-hinting-medium.conf
+  [5]   10-hinting-none.conf
+  [6]   10-hinting-slight.conf
+  [7]   10-no-sub-pixel.conf
+  [8]   10-scale-bitmap-fonts.conf
+  [9]   10-sub-pixel-bgr.conf
+  [10]  10-sub-pixel-rgb.conf
+  [11]  10-sub-pixel-vbgr.conf
+  [12]  10-sub-pixel-vrgb.conf
+  [13]  10-unhinted.conf
+  [14]  11-lcdfilter-default.conf
+  [15]  11-lcdfilter-legacy.conf
+  [16]  11-lcdfilter-light.conf
+  [17]  20-unhint-small-dejavu-sans-mono.conf *
+  [18]  20-unhint-small-dejavu-sans.conf *
+  [19]  20-unhint-small-dejavu-serif.conf *
+  [20]  20-unhint-small-vera.conf
+  [21]  25-ttf-arphic-ukai-render.conf
+  [22]  25-ttf-arphic-uming-bitmaps.conf
+  [23]  25-ttf-arphic-uming-render.conf
+  [24]  25-unhint-nonlatin.conf
+  [25]  30-metric-aliases.conf
+  [26]  30-urw-aliases.conf
+  [27]  35-ttf-arphic-ukai-aliases.conf
+  [28]  35-ttf-arphic-uming-aliases.conf
+  [29]  40-nonlatin.conf
+  [30]  41-ttf-arphic-ukai.conf
+  [31]  41-ttf-arphic-uming.conf
+  [32]  42-luxi-mono.conf
+  [33]  43-wqy-zenhei-sharp.conf
+  [34]  44-wqy-zenhei.conf
+  [35]  45-latin.conf
+  [36]  49-sansserif.conf *
+  [37]  50-user.conf
+  [38]  51-local.conf *
+  [39]  52-infinality.conf *
+  [40]  57-dejavu-sans-mono.conf *
+  [41]  57-dejavu-sans.conf *
+  [42]  57-dejavu-serif.conf *
+  [43]  59-google-droid-sans-mono.conf
+  [44]  59-google-droid-sans.conf
+  [45]  59-google-droid-serif.conf
+  [46]  60-latin.conf
+  [47]  60-liberation.conf
+  [48]  61-stix.conf
+  [49]  62-croscore-arimo.conf
+  [50]  62-croscore-cousine.conf
+  [51]  62-croscore-symbolneu.conf
+  [52]  62-croscore-tinos.conf
+  [53]  64-ttf-arphic-uming.conf
+  [54]  65-fonts-persian.conf
+  [55]  65-khmer.conf
+  [56]  65-nonlatin.conf
+  [57]  66-ja-ipafonts.conf
+  [58]  66-takao-fonts.conf
+  [59]  69-unifont.conf
+  [60]  70-no-bitmaps.conf *
+  [61]  70-yes-bitmaps.conf
+  [62]  75-ttf-arphic-ukai-select.conf
+  [63]  80-delicious.conf
+  [64]  90-synthetic.conf
+  [65]  90-ttf-arphic-ukai-embolden.conf
+  [66]  90-ttf-arphic-uming-embolden.conf
+  [67]  99pdftoopvp.conf
+eselect lcdfilter list
+Available styles:
+  [1]   custom
+  [2]   default
+  [3]   infinality
+  [4]   infinality-classic
+  [5]   infinality-nudge
+  [6]   infinality-push
+  [7]   infinality-sharpened
+  [8]   infinality-shove
+  [9]   linux *
+  [10]  nyx
+  [11]  osx
+  [12]  ubuntu
+  [13]  vanilla
+  [14]  windows-7
+  [15]  windows-7-light
+  [16]  windows-xp
+  [17]  windows-xp-light
+eselect infinality list
+Available styles:
+  [1]   debug
+  [2]   infinality
+  [3]   linux *
+  [4]   nyx
+  [5]   osx
+  [6]   osx2
+  [7]   win7
+  [8]   win98
+  [9]   winxp
+cat /etc/fonts/local.conf
+<?xml version='1.0'?>
+<!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+<fontconfig>
+
+<!-- 
+     It is recommended to disable all fontconfigs except 52-infinality
+     except some who determine the default fonts such as 52-dejavu-sans-mono.conf
+     thus I just comment some stuff to check/recheck behaviour
+     Althouth lets append useful resources:
+        https://wiki.ubuntu.com/Fonts
+        http://neugierig.org/software/chromium/fonts/
+        https://forums.gentoo.org/viewtopic-t-1060342.html
+        https://unix.stackexchange.com/questions/232674/how-to-correctly-set-fonts-rendering-in-archlinux-lxde
+        http://www.linuxfromscratch.org/blfs/view/svn/x/tuning-fontconfig.html
+        https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+	https://wiki.archlinux.org/index.php/font_configuration
+	https://wiki.gentoo.org/wiki/Fontconfig
+	https://wiki.archlinux.org/index.php/Font_configuration/Examples
+-->
+
+<!-- x should know the sub pixel order already, if not we presume rgb -->
+ <match target="font">
+  <test qual="all" name="rgba" compare="eq"><const>unknown</const></test>
+  <edit name="rgba" mode="assign"> <const>rgb</const> </edit>
+ </match>
+ 
+ <match target="pattern">
+  <edit name="dpi" mode="assign"><double>96</double></edit>
+ </match>
+
+ <match target="font">
+  <edit mode="assign" name="hinting"> <bool>true</bool> </edit>
+  <edit mode="assign" name="hintstyle"> <const>hintfull</const> </edit> 
+  <edit mode="assign" name="autohint"> <bool>false</bool> </edit>
+  <edit mode="assign" name="antialias"> <bool>true</bool> </edit>
+  <edit mode="assign" name="lcdfilter"> <const>lcddefault</const> </edit> 
+ </match>
+
+</fontconfig>
+cat ~/.Xresources
+Xft.dpi: 96
+Xft.antialias: true
+Xft.hinting: true
+Xft.rgba: rgb
+Xft.autohint: false
+Xft.hintstyle: hintfull
+Xft.lcdfilter: lcddefault
+conf.d/README
+
+Each file in this directory is a fontconfig configuration file.  Fontconfig
+scans this directory, loading all files of the form [0-9][0-9]*.conf.
+These files are normally installed in /usr/share/fontconfig/conf.avail
+and then symlinked here, allowing them to be easily installed and then
+enabled/disabled by adjusting the symlinks.
+
+The files are loaded in numeric order, the structure of the configuration
+has led to the following conventions in usage:
+
+ Files begining with:	Contain:
+ 
+ 00 through 09		Font directories
+ 10 through 19		system rendering defaults (AA, etc)
+ 20 through 29		font rendering options
+ 30 through 39		family substitution
+ 40 through 49		generic identification, map family->generic
+ 50 through 59		alternate config file loading
+ 60 through 69		generic aliases, map generic->family
+ 70 through 79		select font (adjust which fonts are available)
+ 80 through 89		match target="scan" (modify scanned patterns)
+ 90 through 99		font synthesis

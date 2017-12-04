@@ -1,0 +1,1 @@
+make -j4 && make modules_install && make install && grub-mkconfig -o /boot/grub/grub.cfg
