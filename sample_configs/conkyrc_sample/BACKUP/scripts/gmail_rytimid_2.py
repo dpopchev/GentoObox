@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
-username="rytimid"
-password="star-craft=0%"
+username=""
+password=""
 
 import urllib.request
 from xml.etree import ElementTree as etree
