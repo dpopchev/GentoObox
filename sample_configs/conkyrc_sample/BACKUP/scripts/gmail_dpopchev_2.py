@@ -3,8 +3,8 @@
 import urllib.request
 from xml.etree import ElementTree as etree
 
-username="dpopchev"
-password="pakliBASI=100%"
+username=""
+password=""
 
 # Enter your username and password below within quotes below, in place of ****.
 # Set up authentication for gmail
