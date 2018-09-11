@@ -2,8 +2,8 @@ import os
 
 #Enter your username and password below within double quotes
 # eg. username="username" and password="password"
-username="rytimid"
-password="star-craft=0%"
+username=""
+password=""
 com="wget -q -O - https://"+username+":"+password+"@mail.google.com/mail/feed/atom --no-check-certificate"
 
 temp=os.popen(com)
