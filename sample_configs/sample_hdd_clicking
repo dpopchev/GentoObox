@@ -1,0 +1,5 @@
+http://www.thinkwiki.org/wiki/Problem_with_hard_drive_clicking
+
+sudo emerge -va hdparm
+
+/etc/laptop-mode/laptop-mode.conf, set CONTROL_HD_POWERMGMT=1 and check the values are they 255 or 254 somewhere

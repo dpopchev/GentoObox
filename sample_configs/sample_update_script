@@ -19,7 +19,6 @@ revdep-rebuild -i
 
 # check perl and python and haskell??( I do not have any)
 perl-cleaner --all
-python-updater
 # haskell-updater
 
 # genlop is a Portage log processor which can help estimate build times

@@ -1,0 +1,103 @@
+# Masha i3 cheat sheet
+
+Basic shortcuts
+
+  - Win + F1 ---> this cheat sheet
+
+  - Win + c ---> terminal
+
+  - Win + Shift + c ---> jupyter console
+
+  - Win + e ---> run application
+
+  - Win + Shift + e ---> file manager
+
+  - Win + grave ---> browse opened windows in all workspaces
+
+  - Win + Shift + grave ---> focus the most urgent window
+
+  - Win + l ---> lock
+
+  - Win + Shift + l ---> suspend
+
+  - Win + q ---> kill focused window
+
+  - Win + Return ---> reload i3 config
+
+  - Win + Shift + Return ---> restart i3 in place 
+
+  - Win + Shift + Delete ---> exit i3 session
+
+Modes  
+
+- Win + w ---> "Go to" mode, move focus and go to workspace
+
+- Win + Shift + w --->  "Move" mode, move focused window, move focused window to workspace
+
+- Win + s ---> "Container" mode, switch layout modes, resize windows, enter floating mode
+
+    "Go to" mode
+
+    - a OR h ---> move focus left
+
+    - s OR j ---> move focus down
+
+    - w OR k ---> move focus up
+
+    - d OR l ---> move focus right
+
+    - number from 1 to 0 ---> switch to workspace 1 to 10
+
+    - Win + q ---> kill focused window
+
+    - Escape OR Win + Escape ---> return to normal mode
+
+    "Move" mode
+
+    - a OR h ---> move focused window left
+
+    - s OR j ---> move focused window down
+
+    - w OR k ---> move focused window up
+
+    - d OR l ---> move focused window right
+
+    - number from 1 to 0 ---> move focused window to workspace 1 to 10
+
+    - Win + q ---> kill focused window
+
+    - Escape OR Win + Escape ---> return to normal mode
+
+    "Container" mode
+
+    - w ---> enter _tabbed_ layout
+
+    - Shift + w ---> enter _stacking_ layout
+
+    - e ---> toggle split
+
+    - Shift + e ---> toggle all
+
+    - x ---> _vertical_ split 
+
+    - Shift + x ---> _horizontal_ split 
+
+    - Win + space ---> floating mode
+
+    - Win + Shift + space ---> change focus between tiling floating windows
+
+    - f ---> focus parent
+
+    - Shift + f ---> focus child 
+
+    - h OR d ---> shrink focused window width
+
+    - j OR w ---> grow focused window height
+
+    - k OR s ---> shrink focused window height
+
+    - l OR a ---> grow focused window width 
+
+    - Win + q ---> kill focused window
+
+    - Escape OR Win + Escape ---> return to normal mode

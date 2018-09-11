@@ -1,0 +1,93 @@
+## Conky by Ninquitassar (2012)
+## my deviantart: http://ninquitassar.deviantart.com/
+## special thanks to Iacoporosso
+##..: Conky status :..
+##
+  total_run_times 0                   #Time in seconds; 0 = ever
+  background no                       #No fork in background
+##
+##..: System Settings :..
+##
+  cpu_avg_samples 2                   #The number of samples to average for CPU monitoring
+  net_avg_samples 2                   #The number of samples to average for net data
+##
+##..: Memory :..
+##
+  double_buffer yes                   #eliminates flicker
+  no_buffers yes                      #Subtract (file system) buffers from used memory?
+  text_buffer_size 1024               #Textual buffer memory
+##
+##..: Display :..
+  out_to_console no                   #Print text to stdout
+  update_interval 1                   #Update interval
+##
+##..: Conky Window :..
+##
+  alignment top_left                 #Alignement
+  #
+  minimum_size 80                   #Minimum width (px)
+  maximum_width 250                   #Maximun width (px)
+  #
+  gap_x 5                           #Gap between left/right border
+  gap_y 5                            #Gap between upper/lower border
+  #
+  draw_shades no                      #Draw shadows?
+  draw_outline no                     #Draw outline?
+  draw_borders no                     #Borders to the text?
+  border_width 0                      #Width of borders
+  border_inner_margin 0               #Width of margins
+  #
+  own_window yes                      #Create own window to draw
+  own_window_type override            #Type of window
+  own_window_transparent yes          #Pseudo transparency
+##
+##..: Format :..
+##
+  use_xft yes                         #Use Xft
+  xftalpha .1                         #Alpha of Xft
+  override_utf8_locale yes            #UTF8 forcing
+  uppercase no                        #Only capital letters
+  use_spacer left                    #Adds spaces around certain objects to stop them from moving other things around
+  #
+  xftfont DejaVu Sans Mono:size=9              #Default font
+  #
+  #default_bar_size 82 3               #Specify a default width and height for bars
+  stippled_borders 0                  #Border dashing
+##
+##..: Colors :..
+##
+  default_color FFFFFF                #Default color
+  default_shade_color 333333          #Default color for shadows
+  default_outline_color black         #Default border color
+  #
+  color1 D6D6D6                       #Silver
+  color2 EFEFEF                       #Pearl white
+  color3 A3ADB0                       #Grey
+##
+##..: Misc :..
+##
+  short_units yes                       #Shortens units to a single character
+  pad_percents 2                        #Number of decimals
+##
+##..: Clock and rings :..
+##-- SET TO YOUR PATH!!! --
+##
+  lua_load ~/.config/conkyrc/lua/draw_bg.lua
+  lua_draw_hook_pre draw_bg
+#  lua_load ~/.config/conkyrc/lua/calendar.lua
+#  lua_draw_hook_post clock_rings
+
+TEXT
+${color grey} ${execp ~/.config/conkyrc/scripts/calshing.sh -2} $font $color
+${hr}
+${color grey}${execp ~/.config/conkyrc/scripts/calshing.sh -1} $font $color
+${hr}
+${exec cal -m | sed '1!d'| sed '/./!d' | sed 's/$/ /' | fold -w 21 | sed -n '/^.\{21\}/p' | sed 's/^/ /'}
+${exec cal -m | sed '2!d'| sed '/./!d' | sed 's/$/ /' | fold -w 21 | sed -n '/^.\{21\}/p' | sed 's/^/ /'}
+${color grey}${execp DJS=`date +%_d`; cal -m | sed '1,2d' | sed '/./!d' | sed 's/$/                   /' | fold -w 21 | sed -n '/^.\{21\}/p' | sed 's/^/ /' | sed /" $DJS "/s/" $DJS "/" "'${color red}'"$DJS"'${color}'" "/} $font
+${hr}
+${color white}${execp ~/.config/conkyrc/scripts/calshing.sh 1} $font $color
+${hr}
+${color white}${execp ~/.config/conkyrc/scripts/calshing.sh 2} $font $color
+${hr}
+${color white}${execp ~/.config/conkyrc/scripts/calshing.sh 3} $font $color

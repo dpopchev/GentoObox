@@ -1,0 +1,27 @@
+{
+  "search-panel-visible": false, 
+  "main_window_state": {
+    "__class__": "bytearray", 
+    "__value__": "AAAA/wAAAAD9AAAABAAAAAAAAAFrAAACbPwCAAAAAvsAAAAkAGYAaQBsAGUAcwAtAGIAcgBvAHcAcwBlAHIALQBkAG8AYwBrAQAAAEwAAAJsAAAAbQD////7AAAAHgB0AG8AYwAtAHYAaQBlAHcAZQByAC0AZABvAGMAawAAAAAA/////wAAAG0A////AAAAAQAAAccAAAJs/AIAAAAB+wAAABgAcAByAGUAdgBpAGUAdwAtAGQAbwBjAGsBAAAATAAAAmwAAABHAP///wAAAAIAAAAAAAAAAPwBAAAAAfsAAAAeAGMAaABlAGMAawAtAGIAbwBvAGsALQBkAG8AYwBrAAAAAAD/////AAAArgD///8AAAADAAAAAAAAAAD8AQAAAAH7AAAAHABpAG4AcwBwAGUAYwB0AG8AcgAtAGQAbwBjAGsAAAAAAP////8AAAA4AP///wAAAeYAAAJsAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAIAAAAUAGcAbABvAGIAYQBsAC0AYgBhAHIBAAAAAP////8AAAAAAAAAAAAAABQAcABvAGwAaQBzAGgALQBiAGEAcgEAAAG7/////wAAAAAAAAAA"
+  }, 
+  "recent-books": [
+    "/home/dimitar/Documents/CalibreLibrary/Alieko Konstantinov/Chiestita Nova ghodina (322)/Chiestita Nova ghodina - Alieko Konstantinov.epub", 
+    "/home/dimitar/Documents/CalibreLibrary/Alieko Konstantinov/I siegha biiat, bratie moi (307)/I siegha biiat, bratie moi - Alieko Konstantinov.epub"
+  ], 
+  "main_window_geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywABAAAAAAAAAAAAGwAABScAAAL/AAAAAgAAADAAAAUlAAAC/QAAAAAAAA=="
+  }, 
+  "check-book-splitter-state": {
+    "__class__": "bytearray", 
+    "__value__": "AAAA/wAAAAAAAAACAAAAVAAAAFQAAAAABgEAAAAB"
+  }, 
+  "find-widget-state": {
+    "direction": "down", 
+    "case_sensitive": false, 
+    "mode": "normal", 
+    "wrap": true, 
+    "where": "current", 
+    "dot_all": false
+  }
+}

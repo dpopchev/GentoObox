@@ -1,0 +1,21 @@
+if which dbus-launch >/dev/null && test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+    eval "$(dbus-launch --sh-syntax --exit-with-session)"
+fi;
+/usr/bin/lxqt-policykit-agent &
+stalonetray --dockapp-mode simple --icon-size=18 --kludges=force_icons_size --vertical true --transparent true &
+#nm-applet &
+xscreensaver -no-splash &
+qps -mini &
+setxkbmap -model pc101 -layout us,bg -option grp:alt_shift_toggle &
+xxkb &
+parcellite &
+compton --config ~/.config/compton.conf -b &
+syndaemon -i 0.75 -k -d & 
+transmission-qt --minimized &
+#lxqt-powermanagement &
+lxqt-notificationd &
+#lxqt-runner &
+conky -c ~/.config/conkyrc/all_conky.conf &
+feh --randomize --bg-scale ~/Documents/Wallpapers/*
+#boincmgr &
+bash /home/dimitar/.screenlayout/VGA_home.sh &

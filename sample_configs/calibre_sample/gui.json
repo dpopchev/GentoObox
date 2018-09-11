@@ -1,0 +1,423 @@
+{
+  "quick_start_guide_added": true, 
+  "recently_used_languages": [
+    "Bulgarian"
+  ], 
+  "action-layout-menubar": [
+    "Preferences"
+  ], 
+  "card_b_view books view state": {
+    "column_alignment": {
+      "timestamp": "center", 
+      "size": "center"
+    }, 
+    "column_sizes": {
+      "title": 68, 
+      "timestamp": 81, 
+      "inlibrary": 104, 
+      "collections": 114, 
+      "authors": 103, 
+      "size": 64
+    }, 
+    "languages_injected": true, 
+    "column_positions": {
+      "title": 1, 
+      "timestamp": 3, 
+      "inlibrary": 0, 
+      "collections": 5, 
+      "authors": 2, 
+      "size": 4
+    }, 
+    "sort_history": [
+      [
+        "timestamp", 
+        false
+      ]
+    ], 
+    "hidden_columns": [], 
+    "last_modified_injected": true
+  }, 
+  "book_details_splitter_horizontal_state": [
+    false, 
+    200
+  ], 
+  "jobs view column layout3": {
+    "__class__": "bytearray", 
+    "__value__": "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfQAAAAFAQEBAAAAAAAAAAAAAAAAAGT/////AAAAhAAAAAAAAAAFAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAD6AAAAAAA"
+  }, 
+  "jobs view column layout2": {
+    "__class__": "bytearray", 
+    "__value__": "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApIAAAAFAQEBAAAAAAAAAAAAAAAAAGT/////AAAAhAAAAAAAAAACAAABAgAAAAEAAAAAAAABkAAAAAQAAAAA"
+  }, 
+  "plugin config dialog:Store:\u041c\u043e\u044f\u0442\u0430 \u0431\u0438\u0431\u043b\u0438\u043e\u0442\u0435\u043a\u0430": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywABAAAAAAISAAABNwAAA0MAAAHHAAACFAAAAUwAAANBAAABxQAAAAAAAA=="
+  }, 
+  "convert_single_dialog_geom": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAAZAAAACgAABSgAAAKlAAAAGQAAAAoAAAUoAAACpQAAAAAAAAAABVY="
+  }, 
+  "bulk_metadata_window_geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAADQAAAAYQAABJEAAALlAAAA0AAAAGEAAASRAAAC5QAAAAAAAAAABVY="
+  }, 
+  "plugin config dialog:User Interface Action:EpubMerge": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywABAAAAAAGsAAAAigAAA6gAAAJ0AAABrgAAAJ8AAAOmAAACcgAAAAAAAA=="
+  }, 
+  "epubmerge:update list dialog": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywABAAAAAAIMAAAAuAAABIUAAAJYAAACDgAAAM0AAASDAAACVgAAAAAAAA=="
+  }, 
+  "Prefs Viewer dialog": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywABAAAAAAHQAAAA+QAAA4UAAAIGAAAB0gAAAQ4AAAODAAACBAAAAAAAAA=="
+  }, 
+  "search bar visible": true, 
+  "goodreads sync plugin:add remove dialog": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAWgAAAA2gAACJMAAAI+AAAFoQAAAPQAAAiSAAACPQAAAAAAAAAABVY="
+  }, 
+  "tag browser search box visible": false, 
+  "goodreads sync plugin:maintain sync action dialog": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAYuAAAAjgAACF0AAAJBAAAGLwAAAKgAAAhcAAACQAAAAAAAAAAABVY="
+  }, 
+  "previous_sort_order_BooksView": {
+    "rating": false, 
+    "title": false, 
+    "series": true, 
+    "#reccomend": true, 
+    "authors": true, 
+    "ondevice": false, 
+    "#read": true, 
+    "timestamp": false, 
+    "#recommend": true, 
+    "#readed": false
+  }, 
+  "replace_scene_breaks_history": [
+    "", 
+    "<hr />", 
+    "\u2217 \u2217 \u2217", 
+    "\u2022 \u2022 \u2022", 
+    "\u2666 \u2666 \u2666", 
+    "\u2020 \u2020", 
+    "\u2021 \u2021 \u2021", 
+    "\u221e \u221e \u221e", 
+    "\u00a4 \u00a4 \u00a4"
+  ], 
+  "cover_grid_texture": null, 
+  "custcol-prefs-table-geometry": [
+    112, 
+    99, 
+    364, 
+    86
+  ], 
+  "jobs_dialog_geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAjlAAAASQAAC4kAAAJmAAAI5QAAAEkAAAuJAAACZgAAAAEAAAAABVY="
+  }, 
+  "preferences dialog geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAADaAAAAGAAABHsAAALnAAAA2gAAABgAAAR7AAAC5wAAAAAAAAAABVY="
+  }, 
+  "plugin config dialog:User interface action:Kindle Collections": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAC8AAAALQAABIYAAAKCAAAAvAAAAC0AAASGAAACggAAAAAAAAAABVY="
+  }, 
+  "metasingle_window_geometry3": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAehAAAAAAAADKAAAALPAAAHoQAAAAAAAAygAAACzwAAAAEAAAAABVY="
+  }, 
+  "memory_view books view state": {
+    "column_alignment": {
+      "timestamp": "center", 
+      "size": "center"
+    }, 
+    "column_sizes": {
+      "title": 350, 
+      "timestamp": 91, 
+      "inlibrary": 104, 
+      "collections": 114, 
+      "authors": 350, 
+      "size": 64
+    }, 
+    "languages_injected": true, 
+    "column_positions": {
+      "title": 1, 
+      "timestamp": 3, 
+      "inlibrary": 0, 
+      "collections": 5, 
+      "authors": 2, 
+      "size": 4
+    }, 
+    "sort_history": [
+      [
+        "timestamp", 
+        false
+      ]
+    ], 
+    "hidden_columns": [], 
+    "last_modified_injected": true
+  }, 
+  "goodreads sync plugin:update reading progress dialog:other_prefs": {
+    "last_selected_shelves": [], 
+    "put_finished_on_read_shelf": true, 
+    "display_active_shelves": true
+  }, 
+  "tag_browser_splitter_horizontal_state": [
+    true, 
+    242
+  ], 
+  "toolbar_icon_size": "small", 
+  "kindle_collections plugin:edit collections dialog: geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAADBAAAAoQAABIEAAAIOAAAAwQAAAKEAAASBAAACDgAAAAAAAAAABVY="
+  }, 
+  "action-layout-toolbar-child": [
+    "Preferences", 
+    "Kindle Collections", 
+    "Goodreads Sync"
+  ], 
+  "action-layout-toolbar": [
+    "Add Books", 
+    "Edit Metadata", 
+    null, 
+    "Convert Books", 
+    "View", 
+    null, 
+    "Store", 
+    "Donate", 
+    "Fetch News", 
+    "Help", 
+    null, 
+    "Remove Books", 
+    "Choose Library", 
+    "Save To Disk", 
+    "Connect Share", 
+    "EpubMerge"
+  ], 
+  "library_usage_stats": {
+    "/home/dimitar/Calibre Library": 13, 
+    "/home/dimitar/Documents/CalibreLibrary": 58
+  }, 
+  "Plugin Updater plugin:plugin updater dialog": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywABAAAAAADfAAAAhAAABHYAAAJ7AAAA4QAAAJkAAAR0AAACeQAAAAAAAA=="
+  }, 
+  "quickview visible": false, 
+  "Kindle Collections: Menu Style": "Show menu (default)", 
+  "grid view visible": false, 
+  "goodreads sync plugin:pick goodreads book dialog": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAZJAAAAuwAACMYAAAKdAAAGSgAAANUAAAjFAAACnAAAAAAAAAAABVY="
+  }, 
+  "plugin config dialog:User Interface Action:Goodreads Sync": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAWgAAAAOwAACO0AAALHAAAFoQAAAFUAAAjsAAACxgAAAAAAAAAABVY="
+  }, 
+  "convert_bulk_dialog_geom": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAACpAAAAFgAABKgAAALRAAAAqQAAABYAAASoAAAC0QAAAAAAAAAABVY="
+  }, 
+  "cover_grid_color": [
+    80, 
+    80, 
+    80
+  ], 
+  "custom_colors_for_color_dialog": [
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ], 
+    [
+      255, 
+      255, 
+      255, 
+      255
+    ]
+  ], 
+  "goodreads sync plugin:switch edition dialog": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAHAAAAAogAAA8sAAAKQAAABwQAAALwAAAPKAAACjwAAAAEAAAAABaA="
+  }, 
+  "kindle_collections plugin:edit settings dialog: geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAH/AAABIAAAA0IAAAGPAAAB/wAAASAAAANCAAABjwAAAAAAAAAABVY="
+  }, 
+  "card_a_view books view state": {
+    "column_alignment": {
+      "timestamp": "center", 
+      "size": "center"
+    }, 
+    "column_sizes": {
+      "title": 68, 
+      "timestamp": 81, 
+      "inlibrary": 104, 
+      "collections": 114, 
+      "authors": 103, 
+      "size": 64
+    }, 
+    "languages_injected": true, 
+    "column_positions": {
+      "title": 1, 
+      "timestamp": 3, 
+      "inlibrary": 0, 
+      "collections": 5, 
+      "authors": 2, 
+      "size": 4
+    }, 
+    "sort_history": [
+      [
+        "timestamp", 
+        false
+      ]
+    ], 
+    "hidden_columns": [], 
+    "last_modified_injected": true
+  }, 
+  "action-layout-toolbar-device": [
+    "Add Books", 
+    "Edit Metadata", 
+    null, 
+    "Convert Books", 
+    "View", 
+    "Send To Device", 
+    null, 
+    null, 
+    "Location Manager", 
+    null, 
+    null, 
+    "Fetch News", 
+    "Save To Disk", 
+    "Store", 
+    "Connect Share", 
+    null, 
+    "Remove Books", 
+    null, 
+    "Help", 
+    "Preferences", 
+    "EpubSplit", 
+    "EpubMerge", 
+    "Goodreads Sync", 
+    "Kindle Collections"
+  ], 
+  "show_vl_tabs": false, 
+  "goodreads sync plugin:add remove dialog:other_prefs": {
+    "last_selected_shelves": [
+      "read"
+    ], 
+    "display_active_shelves": true
+  }, 
+  "goodreads sync plugin:update reading progress dialog": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywABAAAAAAGkAAAAzwAABEQAAAJjAAABpgAAAOQAAARCAAACYQAAAAAAAA=="
+  }, 
+  "bulk_metadata_window_tab": 0, 
+  "cover_browser_splitter_vertical_state": [
+    false, 
+    300
+  ], 
+  "single-cover-fetch-dialog-geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAEbAAAAYwAABG4AAALVAAABHAAAAH0AAARtAAAC1AAAAAEAAAAABaA="
+  }, 
+  "duplicates-question-dialog-geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAcoAAAAwAAACXUAAAKNAAAHKQAAANoAAAl0AAACjAAAAAAAAAAABVY="
+  }, 
+  "preferences_window_geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywABAAAAAADaAAAADgAABH8AAAL0AAAA3AAAACMAAAR9AAAC8gAAAAAAAA=="
+  }, 
+  "kindle_collections plugin:import collections dialog: geometry": {
+    "__class__": "bytearray", 
+    "__value__": "AdnQywACAAAAAAGdAAABHwAAA6QAAAGQAAABnQAAAR8AAAOkAAABkAAAAAAAAAAABVY="
+  }
+}

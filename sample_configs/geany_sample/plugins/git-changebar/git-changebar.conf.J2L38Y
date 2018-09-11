@@ -1,0 +1,7 @@
+[general]
+monitor-repository=true
+
+[colors]
+line-added=#73d216
+line-changed=#1a2cbc
+line-removed=#cc0000
